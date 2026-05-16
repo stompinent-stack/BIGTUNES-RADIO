@@ -540,11 +540,24 @@ export default function App() {
   const inp = { width:"100%", background:"rgba(12,5,2,0.8)", border:"1px solid rgba(155,107,58,0.12)", borderRadius:9, padding:"10px 13px", color:"#f0ede8", fontFamily:"sans-serif", fontSize:14, boxSizing:"border-box", outline:"none" };
 
   return (
-    <div style={{ fontFamily:"'Georgia', serif", background:"#080304", minHeight:"100vh", color:"#f0ede8", maxWidth:420, margin:"0 auto", position:"relative" }}>
+    <div style={{ fontFamily:"'Georgia', serif", background:"#080304", minHeight:"100vh", color:"#f0ede8", position:"relative" }}>
       <audio ref={audioRef} style={{ display:"none" }}/>
+      <style>{`
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.2} }
+        .desktop-layout { display: flex; min-height: 100vh; }
+        .desktop-left { width: 380px; flex-shrink: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; border-right: 1px solid rgba(155,107,58,0.15); }
+        .desktop-right { flex: 1; max-width: 700px; overflow-y: auto; padding-bottom: 40px; }
+        .desktop-center { display: flex; justify-content: center; flex: 1; }
+        @media (max-width: 768px) {
+          .desktop-layout { display: block; }
+          .desktop-left { width: 100%; height: auto; position: relative; border-right: none; }
+          .desktop-right { max-width: 100%; }
+          .desktop-center { display: block; }
+        }
+      `}</style>
 
       {/* Stompin Entertainment achtergrond */}
-      <div style={{ position:"fixed", top:0, left:"50%", transform:"translateX(-50%)", width:"100%", maxWidth:420, height:"100vh", zIndex:0, pointerEvents:"none", overflow:"hidden" }}>
+      <div style={{ position:"fixed", top:0, left:0, width:"100%", height:"100vh", zIndex:0, pointerEvents:"none", overflow:"hidden" }}>
         <div style={{ position:"absolute", inset:0, backgroundImage:`url('${BG_IMAGE}')`, backgroundSize:"cover", backgroundPosition:"center top" }}/>
         <div style={{ position:"absolute", inset:0, background:"linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.1) 25%, rgba(0,0,0,0.7) 65%, rgba(0,0,0,0.98) 100%)" }}/>
       </div>
@@ -557,6 +570,8 @@ export default function App() {
       {/* Toast */}
       {toast&&<div style={{ position:"fixed",top:20,left:"50%",transform:"translateX(-50%)",background:toast.type==="warn"?"#BA7517":"#1D9E75",color:"#fff",padding:"10px 20px",borderRadius:24,fontSize:14,fontFamily:"sans-serif",zIndex:9998,whiteSpace:"nowrap" }}>{toast.msg}</div>}
 
+      <div className="desktop-layout">
+      <div className="desktop-left" style={{ position:"relative", zIndex:1 }}>
       {/* Header */}
       <div style={{ padding:"20px 20px 0", position:"relative", zIndex:1 }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start" }}>
@@ -637,6 +652,9 @@ export default function App() {
         ))}
       </div>
 
+      </div>{/* end desktop-left */}
+      <div className="desktop-center" style={{ position:"relative", zIndex:1 }}>
+      <div className="desktop-right">
       {/* Content */}
       <div style={{ padding:"14px 20px 60px",position:"relative",zIndex:1 }}>
         {loading&&<div style={{ textAlign:"center",padding:"40px 0",color:"#555",fontFamily:"sans-serif",fontSize:13 }}>Nummers laden...</div>}
@@ -922,8 +940,8 @@ export default function App() {
           );
         })()}
       </div>
+      </div></div></div>{/* end desktop-right, desktop-center, desktop-layout */}
       <style>{`@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.2} }`}</style>
     </div>
   );
 }
-
