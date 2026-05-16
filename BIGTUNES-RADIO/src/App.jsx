@@ -31,7 +31,7 @@ const COLOR_MAP = {
   blue:   { bg: "#E6F1FB", accent: "#378ADD", text: "#185FA5", badge: "#B5D4F4" },
 };
 
-const GENRES = ["Electronic", "Hip-Hop", "Indie Pop", "Funk", "R&B", "Pop", "Rock", "Jazz", "Reggae", "Dancehall", "Klassiek", "Anders"];
+const GENRES = ["Electronic", "Hip-Hop", "Afrobeats", "Indie Pop", "Funk", "R&B", "Pop", "Rock", "Jazz", "Reggae", "Dancehall", "Klassiek", "Anders"];
 const COLORS = Object.keys(COLOR_MAP);
 const fmtTime = (s) => { if (!s || isNaN(s)) return "0:00"; return `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,"0")}`; };
 const getWeek = (d = new Date()) => { const s = new Date(d.getFullYear(),0,1); return Math.ceil(((d-s)/86400000+s.getDay()+1)/7); };
