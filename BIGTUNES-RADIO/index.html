@@ -2,12 +2,31 @@
 <html lang="nl">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="BIGTUNES RADIO — Amateur radio voor onontdekte artiesten" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content="BIGTUNES RADIO — Amateur radio voor onontdekte artiesten. Stompin Entertainment." />
+    <meta name="theme-color" content="#9B6B3A" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="BIGTUNES" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="BIGTUNES RADIO" />
+    <meta property="og:description" content="Amateur radio voor onontdekte artiesten — Stompin Entertainment" />
+    <meta property="og:image" content="https://i.ibb.co/zTjbKgPg/IMG-0355.png" />
+    <meta property="og:type" content="website" />
+
     <title>BIGTUNES RADIO 📻</title>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { background: #080304; min-height: 100vh; }
+      html, body { background: #080304; min-height: 100vh; overscroll-behavior: none; }
+      body { -webkit-tap-highlight-color: transparent; }
     </style>
   </head>
   <body>
