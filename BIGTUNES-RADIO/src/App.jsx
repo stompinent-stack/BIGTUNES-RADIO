@@ -31,7 +31,7 @@ const COLOR_MAP = {
   blue:   { bg: "#E6F1FB", accent: "#378ADD", text: "#185FA5", badge: "#B5D4F4" },
 };
 
-const GENRES = ["Electronic", "Hip-Hop", "Indie Pop", "Funk", "R&B", "Pop", "Rock", "Jazz", "Reggae", "Klassiek", "Anders"];
+const GENRES = ["Electronic", "Hip-Hop", "Indie Pop", "Funk", "R&B", "Pop", "Rock", "Jazz", "Reggae", "Dancehall", "Klassiek", "Anders"];
 const COLORS = Object.keys(COLOR_MAP);
 const fmtTime = (s) => { if (!s || isNaN(s)) return "0:00"; return `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,"0")}`; };
 const getWeek = (d = new Date()) => { const s = new Date(d.getFullYear(),0,1); return Math.ceil(((d-s)/86400000+s.getDay()+1)/7); };
@@ -545,9 +545,9 @@ export default function App() {
       <style>{`
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.2} }
         .desktop-layout { display: flex; min-height: 100vh; }
-        .desktop-left { width: 380px; flex-shrink: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; border-right: 1px solid rgba(155,107,58,0.15); }
-        .desktop-right { flex: 1; max-width: 700px; overflow-y: auto; padding-bottom: 40px; }
-        .desktop-center { display: flex; justify-content: center; flex: 1; }
+        .desktop-left { width: 380px; flex-shrink: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; border-right: 1px solid rgba(155,107,58,0.2); background: rgba(4,2,1,0.6); backdrop-filter: blur(12px); }
+        .desktop-right { flex: 1; max-width: 700px; overflow-y: auto; padding-bottom: 40px; padding: 20px 30px 40px; }
+        .desktop-center { display: flex; justify-content: center; flex: 1; background: rgba(4,2,1,0.75); backdrop-filter: blur(8px); }
         @media (max-width: 768px) {
           .desktop-layout { display: block; }
           .desktop-left { width: 100%; height: auto; position: relative; border-right: none; }
@@ -581,7 +581,7 @@ export default function App() {
               On Air · Live
             </div>
             <div style={{ fontSize:24,fontWeight:700,color:"#f0ede8",lineHeight:1,letterSpacing:-1 }}>BIG<span style={{ color:"#9B6B3A" }}>TUNES</span> RADIO</div>
-            <div style={{ fontSize:10,color:"rgba(255,255,255,0.3)",fontFamily:"sans-serif",marginTop:2 }}>Stompin Entertainment · Voor amateur artiesten</div>
+            <div style={{ fontSize:10,color:"rgba(255,255,255,0.3)",fontFamily:"sans-serif",marginTop:2 }}>Stompin Entertainment · Home for Independent Artists</div>
           </div>
           <div style={{ textAlign:"right" }}>
             {user ? (
@@ -774,7 +774,7 @@ export default function App() {
           <div>
             <div style={{ marginBottom:16 }}>
               <div style={{ fontSize:19,fontWeight:700,color:"#f0ede8",marginBottom:2 }}>⬆ Upload je nummer</div>
-              <div style={{ fontSize:11,color:"#555",fontFamily:"sans-serif",marginBottom:8 }}>Alleen amateur muziek · MP3 · Max. 3 MB</div>
+              <div style={{ fontSize:11,color:"#555",fontFamily:"sans-serif",marginBottom:8 }}>Independent artists only · MP3 · Max. 3 MB</div>
 
               {/* Prijzen info */}
               <div style={{ background:"rgba(155,107,58,0.08)",border:"1px solid rgba(155,107,58,0.2)",borderRadius:10,padding:"10px 12px",marginBottom:8 }}>
@@ -783,7 +783,7 @@ export default function App() {
                   ✅ 1e nummer — <strong style={{ color:"#1D9E75" }}>Gratis</strong><br/>
                   💳 2e & 3e nummer — <strong style={{ color:"#9B6B3A" }}>€2,50 per track</strong><br/>
                   🎵 Maximum 3 nummers per artiest<br/>
-                  🎤 Alleen amateur / ongesigned artiesten
+                  🎤 Independent & unsigned artists only
                 </div>
               </div>
 
@@ -816,7 +816,7 @@ export default function App() {
                       <option value="">Kies genre...</option>{GENRES.map(g=><option key={g} value={g}>{g}</option>)}
                     </select></div>
                     <div style={{ background:"rgba(155,107,58,0.08)",border:"1px solid rgba(155,107,58,0.2)",borderRadius:9,padding:"10px 12px",fontSize:12,fontFamily:"sans-serif",color:"#9B6B3A" }}>
-                      🎤 Bevestig: dit is amateur / ongesigned muziek — geen major label releases
+                      🎤 Confirm: this is independent / unsigned music — no major label releases
                     </div>
                     <button onClick={()=>{if(!uploadData.title||!uploadData.artist||!uploadData.genre){setUploadError("Vul alle velden in.");return;}setUploadError("");setUploadStep(2);}} style={{ background:"#9B6B3A",border:"none",borderRadius:11,padding:"12px",color:"#fff",fontFamily:"sans-serif",fontSize:14,fontWeight:700,cursor:"pointer" }}>Volgende →</button>
                   </div>
@@ -892,7 +892,7 @@ export default function App() {
                 <div style={{ display:"flex",gap:5,flexWrap:"wrap" }}>
                   <span style={{ background:`${tc.badge}45`,color:tc.text,padding:"2px 8px",borderRadius:9,fontSize:11,fontFamily:"sans-serif" }}>{track.genre}</span>
                   <span style={{ background:"rgba(255,255,255,0.04)",color:"#555",padding:"2px 8px",borderRadius:9,fontSize:11,fontFamily:"sans-serif" }}>{track.month}</span>
-                  <span style={{ background:"rgba(155,107,58,0.12)",color:"#9B6B3A",padding:"2px 8px",borderRadius:9,fontSize:11,fontFamily:"sans-serif" }}>🎤 Amateur</span>
+                  <span style={{ background:"rgba(155,107,58,0.12)",color:"#9B6B3A",padding:"2px 8px",borderRadius:9,fontSize:11,fontFamily:"sans-serif" }}>🎤 Independent</span>
                   {nowPlaying&&<span style={{ background:`${tc.accent}20`,color:tc.accent,padding:"2px 8px",borderRadius:9,fontSize:11,fontFamily:"sans-serif" }}>▶ Speelt nu</span>}
                   {user&&track.user_id===user.id&&<span style={{ background:"rgba(29,158,117,0.12)",color:"#1D9E75",padding:"2px 8px",borderRadius:9,fontSize:11,fontFamily:"sans-serif" }}>Jouw nummer</span>}
                 </div>
