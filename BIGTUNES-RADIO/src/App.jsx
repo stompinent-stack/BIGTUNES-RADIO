@@ -580,19 +580,7 @@ export default function App() {
   return (
     <div style={{ fontFamily:"'Georgia', serif", background:"#080304", minHeight:"100vh", color:"#f0ede8", position:"relative" }}>
       <audio ref={audioRef} style={{ display:"none" }}/>
-      <style>{`
-        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.2} }
-        .desktop-layout { display: flex; min-height: 100vh; }
-        .desktop-left { width: 380px; flex-shrink: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; border-right: 1px solid rgba(155,107,58,0.2); background: rgba(4,2,1,0.6); backdrop-filter: blur(12px); }
-        .desktop-right { flex: 1; max-width: 700px; overflow-y: auto; padding-bottom: 40px; padding: 20px 30px 40px; }
-        .desktop-center { display: flex; justify-content: center; flex: 1; background: rgba(4,2,1,0.75); backdrop-filter: blur(8px); }
-        @media (max-width: 768px) {
-          .desktop-layout { display: block; }
-          .desktop-left { width: 100%; height: auto; position: relative; border-right: none; }
-          .desktop-right { max-width: 100%; }
-          .desktop-center { display: block; }
-        }
-      `}</style>
+
 
       {/* Stompin Entertainment achtergrond */}
       <div style={{ position:"fixed", top:0, left:0, width:"100%", height:"100vh", zIndex:0, pointerEvents:"none", overflow:"hidden" }}>
@@ -783,6 +771,7 @@ export default function App() {
           )}
           </div>
         )}
+
 
         {/* CHARTS */}
         {!loading&&view==="chart"&&(
@@ -1114,8 +1103,27 @@ export default function App() {
           );
         })()}
       </div>
+      </div>
+      </div>
+      </div>
+      </div>
+      </div>
+      </div>
       </div></div></div>{/* end desktop-right, desktop-center, desktop-layout */}
-      <style>{`@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.2} } @keyframes spin { to{transform:rotate(360deg)} }`}</style>
+      <style>{`
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.2} }
+        @keyframes spin { to{transform:rotate(360deg)} }
+        .desktop-layout { display: flex; min-height: 100vh; }
+        .desktop-left { width: 380px; flex-shrink: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; border-right: 1px solid rgba(155,107,58,0.2); background: rgba(4,2,1,0.6); backdrop-filter: blur(12px); }
+        .desktop-right { flex: 1; max-width: 700px; overflow-y: auto; padding: 20px 30px 40px; }
+        .desktop-center { display: flex; justify-content: center; flex: 1; background: rgba(4,2,1,0.75); backdrop-filter: blur(8px); }
+        @media (max-width: 768px) {
+          .desktop-layout { display: block; }
+          .desktop-left { width: 100%; height: auto; position: relative; border-right: none; }
+          .desktop-right { max-width: 100%; padding: 14px 20px 60px; }
+          .desktop-center { display: block; }
+        }
+      `}</style>
     </div>
   );
 }
