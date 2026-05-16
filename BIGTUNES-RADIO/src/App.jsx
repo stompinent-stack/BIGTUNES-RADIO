@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 
 const SUPABASE_URL = "https://cpltcslwtyjrnfkqmwph.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNwbHRjc2x3dHlqcm5ma3Ftd3BoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwMTEyMTAsImV4cCI6MjA5MzU4NzIxMH0.GH_cm7lYgN0LeJiUnoyh7IK2KsAyRvN2i2-hW0JltSQ";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNwbHRjc2x3dHlqcm5ma3Ftd3BoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4NzY2MDksImV4cCI6MjA5NDQ1MjYwOX0.swoUuU6vRImhxd-diSqDvE0pa6zmXh8l3_FLDS6ktmA";
 const MAX_UPLOADS = 2;
 const MAX_FILE_MB = 3;
 const ADMIN_EMAILS = ["stompinent@gmail.com", "wilbertmarman@gmail.com"];
