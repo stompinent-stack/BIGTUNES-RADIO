@@ -595,7 +595,7 @@ export default function App() {
           <div>
             <div style={{ fontSize:10,letterSpacing:3,color:"#9B6B3A",textTransform:"uppercase",fontFamily:"sans-serif",fontWeight:700,marginBottom:3 }}>
               <span style={{ display:"inline-block",width:7,height:7,borderRadius:"50%",background:"#9B6B3A",marginRight:5,verticalAlign:"middle",animation:"pulse 1.2s infinite" }}/>
-              On Air · Live &nbsp;·&nbsp; <span style={{ color:"#f0ede8" }}>👥 {liveListeners} {liveListeners===1?"luisteraar":"luisteraars"} live</span>
+              On Air · Live &nbsp;·&nbsp; 👥 {liveListeners} live
             </div>
             <div style={{ fontSize:24,fontWeight:700,color:"#f0ede8",lineHeight:1,letterSpacing:-1 }}>BIG<span style={{ color:"#9B6B3A" }}>TUNES</span> RADIO</div>
             <div style={{ fontSize:10,color:"rgba(255,255,255,0.3)",fontFamily:"sans-serif",marginTop:2 }}>Stompin Entertainment · Home for Independent Artists</div>
@@ -815,8 +815,7 @@ export default function App() {
               <div style={{ background:"rgba(155,107,58,0.08)",border:"1px solid rgba(155,107,58,0.2)",borderRadius:10,padding:"10px 12px",marginBottom:8 }}>
                 <div style={{ fontSize:12,fontFamily:"sans-serif",color:"#9B6B3A",fontWeight:700,marginBottom:4 }}>📋 Upload regels</div>
                 <div style={{ fontSize:11,fontFamily:"sans-serif",color:"#888",lineHeight:1.6 }}>
-                  ✅ 1e nummer — <strong style={{ color:"#1D9E75" }}>Gratis</strong><br/>
-                  💳 2e & 3e nummer — <strong style={{ color:"#9B6B3A" }}>€2,50 per track</strong><br/>
+                  ✅ Uploaden — <strong style={{ color:"#1D9E75" }}>Gratis</strong><br/>
                   🎵 Maximum 3 nummers per artiest<br/>
                   🎤 Independent & unsigned artists only
                 </div>
