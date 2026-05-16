@@ -367,8 +367,6 @@ export default function App() {
   const [uploading, setUploading] = useState(false);
   const [toast, setToast] = useState(null);
   const [filterGenre, setFilterGenre] = useState("Alles");
-  const [visibleCount, setVisibleCount] = useState(10);
-  const loaderRef = useRef(null);
   const [sort, setSort] = useState("flames");
   const [playlist, setPlaylist] = useState([]);
   const [playlistIndex, setPlaylistIndex] = useState(0);
@@ -543,25 +541,6 @@ export default function App() {
   const showToast = (msg, type="success") => { setToast({msg,type}); setTimeout(()=>setToast(null),3000); };
   const logout = async () => { await supabase.auth.signOut(); setUser(null); setIsAdmin(false); showToast("Uitgelogd"); };
 
-  // Infinite scroll observer
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setVisibleCount(prev => prev + 10);
-        }
-      },
-      { threshold: 0.1 }
-    );
-    if (loaderRef.current) observer.observe(loaderRef.current);
-    return () => observer.disconnect();
-  }, [sortedTracks]);
-
-  // Reset visible count when filter/sort changes
-  useEffect(() => {
-    setVisibleCount(10);
-  }, [filterGenre, sort]);
-
   // Charts
   const thisWeek = getWeek();
   const thisYear = new Date().getFullYear();
@@ -580,7 +559,19 @@ export default function App() {
   return (
     <div style={{ fontFamily:"'Georgia', serif", background:"#080304", minHeight:"100vh", color:"#f0ede8", position:"relative" }}>
       <audio ref={audioRef} style={{ display:"none" }}/>
-
+      <style>{`
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.2} }
+        .desktop-layout { display: flex; min-height: 100vh; }
+        .desktop-left { width: 380px; flex-shrink: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; border-right: 1px solid rgba(155,107,58,0.2); background: rgba(4,2,1,0.6); backdrop-filter: blur(12px); }
+        .desktop-right { flex: 1; max-width: 700px; overflow-y: auto; padding-bottom: 40px; padding: 20px 30px 40px; }
+        .desktop-center { display: flex; justify-content: center; flex: 1; background: rgba(4,2,1,0.75); backdrop-filter: blur(8px); }
+        @media (max-width: 768px) {
+          .desktop-layout { display: block; }
+          .desktop-left { width: 100%; height: auto; position: relative; border-right: none; }
+          .desktop-right { max-width: 100%; }
+          .desktop-center { display: block; }
+        }
+      `}</style>
 
       {/* Stompin Entertainment achtergrond */}
       <div style={{ position:"fixed", top:0, left:0, width:"100%", height:"100vh", zIndex:0, pointerEvents:"none", overflow:"hidden" }}>
@@ -730,7 +721,7 @@ export default function App() {
 
             {tracks.length===0&&<div style={{ textAlign:"center",padding:"40px 20px",color:"#555",fontFamily:"sans-serif" }}><div style={{ fontSize:32,marginBottom:10 }}>🎵</div><div>Nog geen nummers. Wees de eerste!</div></div>}
 
-            {sortedTracks.slice(0, visibleCount).map((track,i)=>{
+            {sortedTracks.map((track,i)=>{
               const tc=COLOR_MAP[track.color]||COLOR_MAP.coral;
               const nowPlaying=currentTrack?.id===track.id;
               const hasFlame=userVotes.flames.has(track.id);
@@ -758,20 +749,8 @@ export default function App() {
                 </div>
               );
             })}
-          {/* Infinite scroll loader */}
-          {visibleCount < sortedTracks.length && (
-            <div ref={loaderRef} style={{ textAlign:"center", padding:"20px 0", color:"#555", fontFamily:"sans-serif", fontSize:13 }}>
-              <div style={{ display:"inline-block", width:20, height:20, border:"2px solid #9B6B3A", borderTopColor:"transparent", borderRadius:"50%", animation:"spin 0.8s linear infinite" }}/>
-            </div>
-          )}
-          {visibleCount >= sortedTracks.length && sortedTracks.length > 10 && (
-            <div style={{ textAlign:"center", padding:"16px 0", color:"#444", fontFamily:"sans-serif", fontSize:12 }}>
-              ✓ Alle {sortedTracks.length} nummers geladen
-            </div>
-          )}
           </div>
         )}
-
 
         {/* CHARTS */}
         {!loading&&view==="chart"&&(
@@ -1103,27 +1082,8 @@ export default function App() {
           );
         })()}
       </div>
-      </div>
-      </div>
-      </div>
-      </div>
-      </div>
-      </div>
       </div></div></div>{/* end desktop-right, desktop-center, desktop-layout */}
-      <style>{`
-        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.2} }
-        @keyframes spin { to{transform:rotate(360deg)} }
-        .desktop-layout { display: flex; min-height: 100vh; }
-        .desktop-left { width: 380px; flex-shrink: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; border-right: 1px solid rgba(155,107,58,0.2); background: rgba(4,2,1,0.6); backdrop-filter: blur(12px); }
-        .desktop-right { flex: 1; max-width: 700px; overflow-y: auto; padding: 20px 30px 40px; }
-        .desktop-center { display: flex; justify-content: center; flex: 1; background: rgba(4,2,1,0.75); backdrop-filter: blur(8px); }
-        @media (max-width: 768px) {
-          .desktop-layout { display: block; }
-          .desktop-left { width: 100%; height: auto; position: relative; border-right: none; }
-          .desktop-right { max-width: 100%; padding: 14px 20px 60px; }
-          .desktop-center { display: block; }
-        }
-      `}</style>
+      <style>{`@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.2} }`}</style>
     </div>
   );
 }
