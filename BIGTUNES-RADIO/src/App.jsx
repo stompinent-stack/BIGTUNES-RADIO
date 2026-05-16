@@ -599,6 +599,23 @@ export default function App() {
         </div>
       </div>
 
+      {/* Bax Music Advertentie Banner */}
+      <div style={{ margin:"12px 20px 0", position:"relative", zIndex:1 }}>
+        <a href="https://www.bax-shop.nl/" target="_blank" rel="noopener noreferrer" style={{ textDecoration:"none", display:"block" }}>
+          <div style={{ background:"rgba(8,3,1,0.82)", border:"1px solid rgba(155,107,58,0.35)", borderRadius:14, padding:"11px 14px", backdropFilter:"blur(12px)", display:"flex", alignItems:"center", gap:12, transition:"border-color 0.2s" }}
+            onMouseOver={e=>e.currentTarget.style.borderColor="rgba(155,107,58,0.7)"}
+            onMouseOut={e=>e.currentTarget.style.borderColor="rgba(155,107,58,0.35)"}>
+            <div style={{ width:42, height:42, borderRadius:10, background:"#E8B84B", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, fontWeight:900, fontSize:16, color:"#000", fontFamily:"sans-serif", letterSpacing:-1 }}>BAX</div>
+            <div style={{ flex:1, minWidth:0 }}>
+              <div style={{ fontSize:9, letterSpacing:1, color:"#9B6B3A", fontFamily:"sans-serif", fontWeight:700, textTransform:"uppercase", marginBottom:2 }}>Gesponsord</div>
+              <div style={{ fontSize:13, fontWeight:700, color:"#f0ede8", fontFamily:"sans-serif" }}>Bax Music — Jouw muziekwinkel</div>
+              <div style={{ fontSize:11, color:"#888", fontFamily:"sans-serif" }}>Pro audio, DJ gear, studio & instruments</div>
+            </div>
+            <div style={{ fontSize:11, color:"#9B6B3A", fontFamily:"sans-serif", fontWeight:700, flexShrink:0 }}>Bezoek →</div>
+          </div>
+        </a>
+      </div>
+
       {/* Player */}
       <div style={{ margin:"14px 20px 0", position:"relative", zIndex:1 }}>
         <div style={{ background:"rgba(8,3,1,0.85)",border:`1px solid ${c.accent}40`,borderRadius:20,padding:"16px",backdropFilter:"blur(14px)" }}>
