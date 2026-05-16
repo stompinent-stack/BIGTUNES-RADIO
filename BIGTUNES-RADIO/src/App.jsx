@@ -362,7 +362,7 @@ export default function App() {
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    if (!file.type.startsWith("audio/")) { setUploadError("Alleen audiobestanden."); return; }
+    if (!file.name.match(/\.mp3$/i) && file.type !== "audio/mpeg") { setUploadError("Alleen MP3 bestanden toegestaan."); return; }
     if (file.size > MAX_FILE_MB*1024*1024) { setUploadError(`Max ${MAX_FILE_MB} MB.`); return; }
     setUploadError(""); setUploadFile(file);
   };
@@ -663,8 +663,8 @@ export default function App() {
                       <div style={{ fontSize:30, marginBottom:7 }}>{uploadFile?"✅":"🎵"}</div>
                       <div style={{ fontSize:13, color:uploadFile?"#1D9E75":"#666", fontFamily:"sans-serif", fontWeight:600 }}>{uploadFile?uploadFile.name:"Tik om audiobestand te kiezen"}</div>
                       {uploadFile&&<div style={{ fontSize:11, color:"#555", fontFamily:"sans-serif", marginTop:3 }}>{(uploadFile.size/1024/1024).toFixed(2)} MB</div>}
-                      <div style={{ fontSize:10, color:"#444", fontFamily:"sans-serif", marginTop:5 }}>MP3, WAV, OGG · Max. 3 MB</div>
-                      <input ref={fileRef} type="file" accept="audio/*" onChange={handleFileSelect} style={{ display:"none" }}/>
+                      <div style={{ fontSize:10, color:"#444", fontFamily:"sans-serif", marginTop:5 }}>Alleen MP3 · Max. 3 MB</div>
+                      <input ref={fileRef} type="file" accept=".mp3,audio/mpeg" onChange={handleFileSelect} style={{ display:"none" }}/>
                     </div>
                     <div style={{ display:"flex", gap:7 }}>
                       <button onClick={()=>setUploadStep(2)} style={{ flex:1, background:"rgba(255,255,255,0.05)", border:"none", borderRadius:11, padding:"12px", color:"#666", fontFamily:"sans-serif", fontSize:14, cursor:"pointer" }}>← Terug</button>
@@ -736,3 +736,4 @@ export default function App() {
     </div>
   );
 }
+
