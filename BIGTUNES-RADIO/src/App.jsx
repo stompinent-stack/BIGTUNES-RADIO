@@ -406,17 +406,10 @@ export default function App() {
     <div style={{ fontFamily:"'Georgia', serif", background:"#080304", minHeight:"100vh", color:"#f0ede8", maxWidth:420, margin:"0 auto", position:"relative" }}>
       <audio ref={audioRef} style={{ display:"none" }}/>
 
-      {/* Achtergrond */}
+      {/* Achtergrond — Stompin Entertainment */}
       <div style={{ position:"fixed", top:0, left:"50%", transform:"translateX(-50%)", width:"100%", maxWidth:420, height:"100vh", zIndex:0, pointerEvents:"none", overflow:"hidden" }}>
-        <div style={{ position:"absolute", inset:0, background:"radial-gradient(ellipse at 33% 0%, #2a0e02 0%, #0d0404 45%, #080203 100%)" }}/>
-        <svg style={{ position:"absolute", inset:0, width:"100%", height:"100%" }} viewBox="0 0 420 900" preserveAspectRatio="xMidYMin slice">
-          <ellipse cx="140" cy="-20" rx="130" ry="170" fill="#D85A30" opacity="0.2"/>
-          <ellipse cx="330" cy="-15" rx="90" ry="120" fill="#BA7517" opacity="0.13"/>
-          <polygon points="140,-20 50,900 230,900" fill="#D85A30" opacity="0.045"/>
-          <polygon points="140,-20 95,900 185,900" fill="#EF9F27" opacity="0.055"/>
-          <polygon points="330,-15 255,900 400,900" fill="#BA7517" opacity="0.03"/>
-          <ellipse cx="210" cy="930" rx="290" ry="45" fill="#D85A30" opacity="0.09"/>
-        </svg>
+        <div style={{ position:"absolute", inset:0, backgroundImage:"url('https://i.ibb.co/zTjbKgPg/IMG-0355.png')", backgroundSize:"cover", backgroundPosition:"center top" }}/>
+        <div style={{ position:"absolute", inset:0, background:"linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.1) 25%, rgba(0,0,0,0.7) 65%, rgba(0,0,0,0.98) 100%)" }}/>
       </div>
 
       {/* Modals */}
@@ -736,4 +729,3 @@ export default function App() {
     </div>
   );
 }
-
