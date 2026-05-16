@@ -1,0 +1,11 @@
+name = "bigtunes-worker"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+account_id = "76a98df8c5fbf2903d57f6825594a39a"
+
+[[r2_buckets]]
+binding = "BIGTUNES_BUCKET"
+bucket_name = "bigtunes-audio"
+
+[vars]
+ENVIRONMENT = "production"
