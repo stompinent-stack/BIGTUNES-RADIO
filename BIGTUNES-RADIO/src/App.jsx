@@ -662,7 +662,7 @@ export default function App() {
 
       {/* Nav */}
       <div style={{ display:"flex",gap:4,padding:"12px 20px 0",position:"relative",zIndex:1 }}>
-        {[["radio","📡","Station"],["chart","🏆","Charts"],["upload","⬆","Upload"]].map(([v,icon,label])=>(
+        {[["radio","📡","Station"],["chart","🏆","Charts"],["upload","⬆","Upload"],["about","ℹ️","Over"]].map(([v,icon,label])=>(
           <button key={v} onClick={()=>{setView(v);setUploadStep(1);}} style={{ flex:1,padding:"8px 4px",background:view===v&&view!=="detail"?"#9B6B3A":"rgba(255,255,255,0.06)",border:"none",borderRadius:10,color:view===v&&view!=="detail"?"#fff":"#777",fontFamily:"sans-serif",fontSize:12,fontWeight:600,cursor:"pointer" }}>
             {icon} {label}
           </button>
@@ -727,6 +727,7 @@ export default function App() {
                   <div style={{ display:"flex",gap:7,marginTop:9,paddingTop:8,borderTop:"1px solid rgba(255,255,255,0.04)" }}>
                     <button onClick={e=>{e.stopPropagation();vote(track.id,"flame");}} style={BtnStyle(hasFlame,"#D85A30")}>🔥 {track.flames}</button>
                     <button onClick={e=>{e.stopPropagation();vote(track.id,"like");}} style={BtnStyle(hasLike,"#7F77DD")}>❤️ {track.likes}</button>
+                    <a href={`https://wa.me/?text=${encodeURIComponent(`🎵 "${track.title}" van ${track.artist} op BIGTUNES RADIO! 👉 https://bigtunes-radio.vercel.app`)}`} target="_blank" rel="noreferrer" onClick={e=>e.stopPropagation()} style={{ display:"flex",alignItems:"center",gap:4,background:"transparent",border:"1px solid rgba(37,211,102,0.3)",borderRadius:20,padding:"3px 10px",color:"#25D366",fontFamily:"sans-serif",fontSize:12,textDecoration:"none",marginLeft:"auto" }}>📱 Deel</a>
                   </div>
                 </div>
               );
@@ -880,6 +881,115 @@ export default function App() {
                 {uploadError&&<div style={{ background:"rgba(216,90,48,0.1)",border:"1px solid rgba(216,90,48,0.3)",borderRadius:9,padding:"8px 13px",fontSize:12,color:"#D85A30",fontFamily:"sans-serif",marginTop:8 }}>⚠️ {uploadError}</div>}
               </div>
             )}
+          </div>
+        )}
+
+        {/* ABOUT */}
+        {view==="about"&&(
+          <div>
+            {/* Hero */}
+            <div style={{ marginBottom:24 }}>
+              <div style={{ fontSize:10,letterSpacing:3,color:"#9B6B3A",fontFamily:"sans-serif",fontWeight:700,textTransform:"uppercase",marginBottom:8 }}>
+                ● Stompin Entertainment presenteert
+              </div>
+              <div style={{ fontSize:26,fontWeight:700,color:"#f0ede8",lineHeight:1.2,marginBottom:12 }}>
+                BIG<span style={{ color:"#9B6B3A" }}>TUNES</span> RADIO
+              </div>
+              <div style={{ fontSize:15,color:"#ccc",lineHeight:1.8,fontStyle:"italic",borderLeft:"3px solid #9B6B3A",paddingLeft:14,marginBottom:20 }}>
+                "Voor de stemmen die niemand hoort — de artiesten die te rauw, te echt en te vrij zijn voor de grote commerciële stations."
+              </div>
+            </div>
+
+            {/* Missie */}
+            <div style={{ background:"rgba(12,5,2,0.75)",border:"1px solid rgba(155,107,58,0.2)",borderRadius:16,padding:"20px",marginBottom:14,backdropFilter:"blur(8px)" }}>
+              <div style={{ fontSize:10,letterSpacing:2,color:"#9B6B3A",fontFamily:"sans-serif",fontWeight:700,textTransform:"uppercase",marginBottom:10 }}>🎯 Onze Missie</div>
+              <div style={{ fontSize:14,color:"#ccc",lineHeight:1.8 }}>
+                BIGTUNES RADIO is opgericht voor artiesten die geen airplay krijgen op de grote commerciële radiostations. Hier vind je geen opgelegde hitlijsten of label-gedreven muziek — alleen puur, ongepolijst talent.
+              </div>
+              <div style={{ fontSize:14,color:"#ccc",lineHeight:1.8,marginTop:12 }}>
+                Of je nu underground hip-hop maakt, harde electronic, ruwe R&B of experimentele dancehall — bij BIGTUNES krijg jij de spotlight die je verdient.
+              </div>
+            </div>
+
+            {/* Wat je vindt */}
+            <div style={{ background:"rgba(12,5,2,0.75)",border:"1px solid rgba(155,107,58,0.2)",borderRadius:16,padding:"20px",marginBottom:14,backdropFilter:"blur(8px)" }}>
+              <div style={{ fontSize:10,letterSpacing:2,color:"#9B6B3A",fontFamily:"sans-serif",fontWeight:700,textTransform:"uppercase",marginBottom:14 }}>🎵 Wat je hier vindt</div>
+              <div style={{ display:"flex",flexDirection:"column",gap:12 }}>
+                {[
+                  ["🔥","Underground & Ongesigned","Puur artistieke tracks — geen labels, geen filters, geen compromissen"],
+                  ["🎤","Echte Artiesten","Independent musicians die hun hart in hun muziek stoppen"],
+                  ["🏆","Community Stemmen","Jij bepaalt wie bovenaan staat — niet een algoritme of een label"],
+                  ["📡","On-Demand Radio","Luister wanneer je wil, stem op wat je raakt, deel wat je beweegt"],
+                ].map(([icon,title,desc])=>(
+                  <div key={title} style={{ display:"flex",gap:12,alignItems:"flex-start" }}>
+                    <div style={{ fontSize:22,flexShrink:0,marginTop:2 }}>{icon}</div>
+                    <div>
+                      <div style={{ fontSize:13,fontWeight:700,color:"#f0ede8",marginBottom:3 }}>{title}</div>
+                      <div style={{ fontSize:12,color:"#777",fontFamily:"sans-serif",lineHeight:1.5 }}>{desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Voor artiesten */}
+            <div style={{ background:"rgba(155,107,58,0.08)",border:"1px solid rgba(155,107,58,0.3)",borderRadius:16,padding:"20px",marginBottom:14,backdropFilter:"blur(8px)" }}>
+              <div style={{ fontSize:10,letterSpacing:2,color:"#9B6B3A",fontFamily:"sans-serif",fontWeight:700,textTransform:"uppercase",marginBottom:10 }}>🎸 Voor Artiesten</div>
+              <div style={{ fontSize:14,color:"#ccc",lineHeight:1.8,marginBottom:14 }}>
+                Ben jij een ongesigned artiest die zijn muziek wil delen met de wereld? Upload je track en laat de community beslissen. Jouw eerste nummer is altijd <strong style={{ color:"#1D9E75" }}>gratis</strong>.
+              </div>
+              <div style={{ display:"flex",flexDirection:"column",gap:8,marginBottom:16 }}>
+                {[
+                  ["✅","1e nummer uploaden — Gratis"],
+                  ["💳","2e & 3e nummer — €2,50 per track"],
+                  ["🎵","Maximaal 3 nummers per artiest"],
+                  ["🎤","Alleen independent & unsigned artiesten"],
+                  ["📱","MP3 formaat · Max. 3 MB"],
+                ].map(([icon,text])=>(
+                  <div key={text} style={{ display:"flex",gap:8,alignItems:"center",fontSize:13,fontFamily:"sans-serif",color:"#aaa" }}>
+                    <span>{icon}</span><span>{text}</span>
+                  </div>
+                ))}
+              </div>
+              <button onClick={()=>setView("upload")} style={{ width:"100%",background:"#9B6B3A",border:"none",borderRadius:11,padding:"13px",color:"#fff",fontFamily:"sans-serif",fontSize:14,fontWeight:700,cursor:"pointer" }}>
+                🎵 Upload je nummer nu
+              </button>
+            </div>
+
+            {/* Stompin Entertainment */}
+            <div style={{ background:"rgba(12,5,2,0.75)",border:"1px solid rgba(155,107,58,0.2)",borderRadius:16,padding:"20px",marginBottom:14,backdropFilter:"blur(8px)" }}>
+              <div style={{ fontSize:10,letterSpacing:2,color:"#9B6B3A",fontFamily:"sans-serif",fontWeight:700,textTransform:"uppercase",marginBottom:10 }}>🏢 Stompin Entertainment</div>
+              <div style={{ fontSize:14,color:"#ccc",lineHeight:1.8 }}>
+                BIGTUNES RADIO is een initiatief van <strong style={{ color:"#f0ede8" }}>Stompin Entertainment</strong> — dedicated to giving independent artists the platform they deserve.
+              </div>
+              <div style={{ marginTop:14,paddingTop:14,borderTop:"1px solid rgba(255,255,255,0.05)" }}>
+                <div style={{ fontSize:11,color:"#555",fontFamily:"sans-serif",marginBottom:8 }}>CONTACT</div>
+                <a href="mailto:info@stompinent.com" style={{ fontSize:13,color:"#9B6B3A",fontFamily:"sans-serif",textDecoration:"none" }}>
+                  📧 stompinent@gmail.com
+                </a>
+              </div>
+            </div>
+
+            {/* Hoe werkt het stemmen */}
+            <div style={{ background:"rgba(12,5,2,0.75)",border:"1px solid rgba(155,107,58,0.2)",borderRadius:16,padding:"20px",backdropFilter:"blur(8px)" }}>
+              <div style={{ fontSize:10,letterSpacing:2,color:"#9B6B3A",fontFamily:"sans-serif",fontWeight:700,textTransform:"uppercase",marginBottom:14 }}>📊 Hoe werkt de ranglijst?</div>
+              <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
+                {[
+                  ["🔥","Geef een vlam","Vlammen tellen zwaarder mee in de ranglijst — dit is jouw krachtigste stem"],
+                  ["❤️","Geef een like","Likes tellen ook mee — samen bepalen ze wie bovenaan staat"],
+                  ["🏆","Nummer van de maand","Het nummer met de meeste stemmen wint de maandtitel"],
+                  ["📅","Wekelijkse chart","Elke week een verse top 10 — jouw stem telt direct mee"],
+                ].map(([icon,title,desc])=>(
+                  <div key={title} style={{ display:"flex",gap:12,alignItems:"flex-start" }}>
+                    <div style={{ fontSize:20,flexShrink:0 }}>{icon}</div>
+                    <div>
+                      <div style={{ fontSize:13,fontWeight:700,color:"#f0ede8",marginBottom:2 }}>{title}</div>
+                      <div style={{ fontSize:12,color:"#777",fontFamily:"sans-serif",lineHeight:1.5 }}>{desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         )}
 
