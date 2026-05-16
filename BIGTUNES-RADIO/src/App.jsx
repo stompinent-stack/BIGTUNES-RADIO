@@ -367,6 +367,8 @@ export default function App() {
   const [uploading, setUploading] = useState(false);
   const [toast, setToast] = useState(null);
   const [filterGenre, setFilterGenre] = useState("Alles");
+  const [visibleCount, setVisibleCount] = useState(10);
+  const loaderRef = useRef(null);
   const [sort, setSort] = useState("flames");
   const [playlist, setPlaylist] = useState([]);
   const [playlistIndex, setPlaylistIndex] = useState(0);
@@ -540,6 +542,25 @@ export default function App() {
 
   const showToast = (msg, type="success") => { setToast({msg,type}); setTimeout(()=>setToast(null),3000); };
   const logout = async () => { await supabase.auth.signOut(); setUser(null); setIsAdmin(false); showToast("Uitgelogd"); };
+
+  // Infinite scroll observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setVisibleCount(prev => prev + 10);
+        }
+      },
+      { threshold: 0.1 }
+    );
+    if (loaderRef.current) observer.observe(loaderRef.current);
+    return () => observer.disconnect();
+  }, [sortedTracks]);
+
+  // Reset visible count when filter/sort changes
+  useEffect(() => {
+    setVisibleCount(10);
+  }, [filterGenre, sort]);
 
   // Charts
   const thisWeek = getWeek();
@@ -721,7 +742,7 @@ export default function App() {
 
             {tracks.length===0&&<div style={{ textAlign:"center",padding:"40px 20px",color:"#555",fontFamily:"sans-serif" }}><div style={{ fontSize:32,marginBottom:10 }}>🎵</div><div>Nog geen nummers. Wees de eerste!</div></div>}
 
-            {sortedTracks.map((track,i)=>{
+            {sortedTracks.slice(0, visibleCount).map((track,i)=>{
               const tc=COLOR_MAP[track.color]||COLOR_MAP.coral;
               const nowPlaying=currentTrack?.id===track.id;
               const hasFlame=userVotes.flames.has(track.id);
@@ -749,6 +770,17 @@ export default function App() {
                 </div>
               );
             })}
+          {/* Infinite scroll loader */}
+          {visibleCount < sortedTracks.length && (
+            <div ref={loaderRef} style={{ textAlign:"center", padding:"20px 0", color:"#555", fontFamily:"sans-serif", fontSize:13 }}>
+              <div style={{ display:"inline-block", width:20, height:20, border:"2px solid #9B6B3A", borderTopColor:"transparent", borderRadius:"50%", animation:"spin 0.8s linear infinite" }}/>
+            </div>
+          )}
+          {visibleCount >= sortedTracks.length && sortedTracks.length > 10 && (
+            <div style={{ textAlign:"center", padding:"16px 0", color:"#444", fontFamily:"sans-serif", fontSize:12 }}>
+              ✓ Alle {sortedTracks.length} nummers geladen
+            </div>
+          )}
           </div>
         )}
 
@@ -1083,7 +1115,7 @@ export default function App() {
         })()}
       </div>
       </div></div></div>{/* end desktop-right, desktop-center, desktop-layout */}
-      <style>{`@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.2} }`}</style>
+      <style>{`@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.2} } @keyframes spin { to{transform:rotate(360deg)} }`}</style>
     </div>
   );
 }
