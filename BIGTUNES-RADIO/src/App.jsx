@@ -953,12 +953,11 @@ export default function App() {
             <div style={{ background:"rgba(155,107,58,0.08)",border:"1px solid rgba(155,107,58,0.3)",borderRadius:16,padding:"20px",marginBottom:14,backdropFilter:"blur(8px)" }}>
               <div style={{ fontSize:10,letterSpacing:2,color:"#9B6B3A",fontFamily:"sans-serif",fontWeight:700,textTransform:"uppercase",marginBottom:10 }}>🎸 Voor Artiesten</div>
               <div style={{ fontSize:14,color:"#ccc",lineHeight:1.8,marginBottom:14 }}>
-                Ben jij een ongesigned artiest die zijn muziek wil delen met de wereld? Upload je track en laat de community beslissen. Jouw eerste nummer is altijd <strong style={{ color:"#1D9E75" }}>gratis</strong>.
+                Ben jij een ongesigned artiest die zijn muziek wil delen met de wereld? Upload je track en laat de community beslissen. Upload je eerste nummer <strong style={{ color:"#1D9E75" }}>gratis</strong> en laat de wereld jouw muziek horen.
               </div>
               <div style={{ display:"flex",flexDirection:"column",gap:8,marginBottom:16 }}>
                 {[
-                  ["✅","1e nummer uploaden — Gratis"],
-                  ["💳","2e & 3e nummer — €2,50 per track"],
+                  ["✅","Uploaden — Gratis"],
                   ["🎵","Maximaal 3 nummers per artiest"],
                   ["🎤","Alleen independent & unsigned artiesten"],
                   ["📱","MP3 formaat · Max. 3 MB"],
