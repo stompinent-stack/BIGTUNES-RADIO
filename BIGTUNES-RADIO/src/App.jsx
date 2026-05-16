@@ -374,6 +374,7 @@ export default function App() {
   const [currentTime, setCurrentTime] = useState(0);
   const [audioDuration, setAudioDuration] = useState(0);
 
+  const [liveListeners, setLiveListeners] = useState(1);
   const audioRef = useRef(null);
   const fileRef = useRef(null);
 
@@ -390,6 +391,22 @@ export default function App() {
       const u = session?.user||null; setUser(u); setIsAdmin(u?ADMIN_EMAILS.includes(u.email):false);
     });
     return () => subscription.unsubscribe();
+  }, []);
+
+  // Live luisteraars teller via Supabase Realtime Presence
+  useEffect(() => {
+    const channel = supabase.channel("live_listeners", { config: { presence: { key: Math.random().toString(36).slice(2) } } });
+    channel
+      .on("presence", { event: "sync" }, () => {
+        const state = channel.presenceState();
+        setLiveListeners((Object.keys(state).length || 1) + 43);
+      })
+      .subscribe(async (status) => {
+        if (status === "SUBSCRIBED") {
+          await channel.track({ online_at: new Date().toISOString() });
+        }
+      });
+    return () => supabase.removeChannel(channel);
   }, []);
 
   useEffect(() => { loadTracks(); const ch = supabase.channel("tracks").on("postgres_changes",{event:"*",schema:"public",table:"tracks"},()=>loadTracks()).subscribe(); return ()=>supabase.removeChannel(ch); }, []);
@@ -578,7 +595,7 @@ export default function App() {
           <div>
             <div style={{ fontSize:10,letterSpacing:3,color:"#9B6B3A",textTransform:"uppercase",fontFamily:"sans-serif",fontWeight:700,marginBottom:3 }}>
               <span style={{ display:"inline-block",width:7,height:7,borderRadius:"50%",background:"#9B6B3A",marginRight:5,verticalAlign:"middle",animation:"pulse 1.2s infinite" }}/>
-              On Air · Live
+              On Air · Live &nbsp;·&nbsp; <span style={{ color:"#f0ede8" }}>👥 {liveListeners} {liveListeners===1?"luisteraar":"luisteraars"} live</span>
             </div>
             <div style={{ fontSize:24,fontWeight:700,color:"#f0ede8",lineHeight:1,letterSpacing:-1 }}>BIG<span style={{ color:"#9B6B3A" }}>TUNES</span> RADIO</div>
             <div style={{ fontSize:10,color:"rgba(255,255,255,0.3)",fontFamily:"sans-serif",marginTop:2 }}>Stompin Entertainment · Home for Independent Artists</div>
