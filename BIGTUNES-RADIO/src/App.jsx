@@ -63,7 +63,7 @@ function AuthModal({ onClose, onAuth }) {
       } else {
         const { error } = await supabase.auth.signUp({ email, password });
         if (error) throw error;
-        setSuccess("Controleer je e-mail om je account te bevestigen!");
+        setSuccess("Check your email to confirm your account!");
       }
     } catch (e) { setError(e.message); }
     finally { setLoading(false); }
@@ -74,22 +74,22 @@ function AuthModal({ onClose, onAuth }) {
   return (
     <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.88)", zIndex:9999, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
       <div style={{ background:"#0d0604", border:"1px solid rgba(155,107,58,0.3)", borderRadius:18, padding:24, width:"100%", maxWidth:360 }}>
-        <div style={{ fontSize:18, fontWeight:700, color:"#f0ede8", marginBottom:4 }}>{mode==="login"?"Inloggen":"Account aanmaken"}</div>
-        <div style={{ fontSize:12, color:"#666", fontFamily:"sans-serif", marginBottom:20 }}>Nodig om nummers te uploaden en te stemmen</div>
+        <div style={{ fontSize:18, fontWeight:700, color:"#f0ede8", marginBottom:4 }}>{mode==="login"?"Login":"Create account"}</div>
+        <div style={{ fontSize:12, color:"#666", fontFamily:"sans-serif", marginBottom:20 }}>Required to upload tracks and vote</div>
         <div style={{ display:"flex", flexDirection:"column", gap:10, marginBottom:14 }}>
-          <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="E-mailadres" type="email" style={inp}/>
-          <input value={password} onChange={e=>setPassword(e.target.value)} placeholder="Wachtwoord" type="password" style={inp}/>
+          <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email address" type="email" style={inp}/>
+          <input value={password} onChange={e=>setPassword(e.target.value)} placeholder="Password" type="password" style={inp}/>
         </div>
         {error&&<div style={{ background:"rgba(216,90,48,0.1)", border:"1px solid rgba(216,90,48,0.3)", borderRadius:8, padding:"8px 12px", fontSize:12, color:"#D85A30", fontFamily:"sans-serif", marginBottom:12 }}>⚠️ {error}</div>}
         {success&&<div style={{ background:"rgba(29,158,117,0.1)", border:"1px solid rgba(29,158,117,0.3)", borderRadius:8, padding:"8px 12px", fontSize:12, color:"#1D9E75", fontFamily:"sans-serif", marginBottom:12 }}>✅ {success}</div>}
         <button onClick={submit} disabled={loading} style={{ width:"100%", background:"#9B6B3A", border:"none", borderRadius:11, padding:"13px", color:"#fff", fontFamily:"sans-serif", fontSize:15, fontWeight:700, cursor:loading?"default":"pointer", opacity:loading?0.7:1, marginBottom:10 }}>
-          {loading?"Bezig...":mode==="login"?"Inloggen":"Aanmaken"}
+          {loading?"Loading...":mode==="login"?"Login":"Create"}
         </button>
         <div style={{ display:"flex", justifyContent:"space-between" }}>
           <button onClick={()=>{setMode(mode==="login"?"register":"login");setError("");setSuccess("");}} style={{ background:"transparent", border:"none", color:"#888", fontFamily:"sans-serif", fontSize:12, cursor:"pointer" }}>
-            {mode==="login"?"Nog geen account? Aanmelden":"Al een account? Inloggen"}
+            {mode==="login"?"No account yet? Sign up":"Al een account? Login"}
           </button>
-          <button onClick={onClose} style={{ background:"transparent", border:"none", color:"#555", fontFamily:"sans-serif", fontSize:12, cursor:"pointer" }}>Sluiten</button>
+          <button onClick={onClose} style={{ background:"transparent", border:"none", color:"#555", fontFamily:"sans-serif", fontSize:12, cursor:"pointer" }}>Close</button>
         </div>
       </div>
     </div>
@@ -153,29 +153,29 @@ function PaymentModal({ onClose, onPaid, trackTitle, artistName, userId }) {
       <div style={{ background:"#0d0604", border:"1px solid rgba(155,107,58,0.3)", borderRadius:18, padding:24, width:"100%", maxWidth:360 }}>
         <div style={{ fontSize:22, textAlign:"center", marginBottom:8 }}>{step==="verifying"?"⏳":"🏦"}</div>
         <div style={{ fontSize:17, fontWeight:700, color:"#f0ede8", marginBottom:6, textAlign:"center" }}>
-          {step==="verifying"?"Betaling verwerken...":"Betalen via iDEAL — €2,50"}
+          {step==="verifying"?"Processing payment...":"Pay via iDEAL — €2,50"}
         </div>
         {step==="confirm"&&<>
           <div style={{ fontSize:13, color:"#888", fontFamily:"sans-serif", marginBottom:16, textAlign:"center", lineHeight:1.6 }}>
-            Je 1e nummer is gratis. Extra nummers kosten €2,50 per track (max. 3 totaal).
+            Your 1st track is free. Extra tracks cost €2.50 each (max. 3 total).
           </div>
           <div style={{ background:"rgba(155,107,58,0.1)", border:"1px solid rgba(155,107,58,0.3)", borderRadius:10, padding:"10px 14px", marginBottom:16, fontSize:13, color:"#9B6B3A", fontFamily:"sans-serif" }}>
-            📀 <strong style={{ color:"#f0ede8" }}>{trackTitle}</strong> van {artistName}
+            📀 <strong style={{ color:"#f0ede8" }}>{trackTitle}</strong> of {artistName}
           </div>
           <div style={{ background:"rgba(29,100,200,0.08)", border:"1px solid rgba(29,100,200,0.25)", borderRadius:10, padding:"10px 14px", marginBottom:16, fontSize:12, fontFamily:"sans-serif", color:"#85B7EB" }}>
-            🏦 Betaal veilig via iDEAL — jouw eigen bank<br/>
+            🏦 Pay securely via iDEAL — your own bank<br/>
             <span style={{ fontSize:10, color:"#555", marginTop:4, display:"block" }}>ING · Rabobank · ABN AMRO · en meer</span>
           </div>
           {error&&<div style={{ background:"rgba(216,90,48,0.1)", border:"1px solid rgba(216,90,48,0.3)", borderRadius:8, padding:"8px 12px", fontSize:12, color:"#D85A30", fontFamily:"sans-serif", marginBottom:12 }}>⚠️ {error}</div>}
           <button onClick={handlePay} disabled={loading} style={{ width:"100%", background:"#003087", border:"none", borderRadius:11, padding:"13px", color:"#fff", fontFamily:"sans-serif", fontSize:15, fontWeight:700, cursor:"pointer", marginBottom:10 }}>
-            🏦 Betaal €2,50 via iDEAL
+            🏦 Pay €2.50 via iDEAL
           </button>
-          <button onClick={onClose} style={{ width:"100%", background:"transparent", border:"1px solid rgba(255,255,255,0.08)", borderRadius:11, padding:"11px", color:"#666", fontFamily:"sans-serif", fontSize:14, cursor:"pointer" }}>Annuleren</button>
-          <div style={{ fontSize:10, color:"#444", fontFamily:"sans-serif", textAlign:"center", marginTop:10 }}>Veilig betalen via Stripe · iDEAL</div>
+          <button onClick={onClose} style={{ width:"100%", background:"transparent", border:"1px solid rgba(255,255,255,0.08)", borderRadius:11, padding:"11px", color:"#666", fontFamily:"sans-serif", fontSize:14, cursor:"pointer" }}>Cancel</button>
+          <div style={{ fontSize:10, color:"#444", fontFamily:"sans-serif", textAlign:"center", marginTop:10 }}>Secure payment via Stripe · iDEAL</div>
         </>}
         {step==="verifying"&&(
           <div style={{ textAlign:"center", padding:"20px 0", color:"#888", fontFamily:"sans-serif", fontSize:13 }}>
-            Even geduld — betaling wordt bevestigd...
+            Please wait — confirming payment...
           </div>
         )}
       </div>
@@ -215,16 +215,16 @@ function Comments({ trackId, user, isAdmin, onAuthRequired }) {
 
   return (
     <div style={{ background:"rgba(12,5,2,0.65)", border:"1px solid rgba(155,107,58,0.1)", borderRadius:13, padding:"13px", backdropFilter:"blur(8px)" }}>
-      <div style={{ fontSize:9, color:"#555", fontFamily:"sans-serif", marginBottom:12, letterSpacing:1, textTransform:"uppercase" }}>💬 Reacties ({comments.length})</div>
+      <div style={{ fontSize:9, color:"#555", fontFamily:"sans-serif", marginBottom:12, letterSpacing:1, textTransform:"uppercase" }}>💬 Comments ({comments.length})</div>
 
       <div style={{ display:"flex", gap:8, marginBottom:14 }}>
-        <textarea value={text} onChange={e=>setText(e.target.value)} placeholder={user?"Schrijf een reactie...":"Log in om te reageren..."} rows={2} style={inp} onFocus={()=>!user&&onAuthRequired()}/>
+        <textarea value={text} onChange={e=>setText(e.target.value)} placeholder={user?"Write a comment...":"Login to comment..."} rows={2} style={inp} onFocus={()=>!user&&onAuthRequired()}/>
         <button onClick={postComment} disabled={loading||!text.trim()} style={{ background:"#9B6B3A", border:"none", borderRadius:9, padding:"0 14px", color:"#fff", fontFamily:"sans-serif", fontSize:13, fontWeight:700, cursor:"pointer", flexShrink:0, opacity:!text.trim()?0.5:1 }}>
           {loading?"...":"→"}
         </button>
       </div>
 
-      {comments.length === 0 && <div style={{ fontSize:12, color:"#444", fontFamily:"sans-serif", textAlign:"center", padding:"10px 0" }}>Nog geen reacties. Wees de eerste!</div>}
+      {comments.length === 0 && <div style={{ fontSize:12, color:"#444", fontFamily:"sans-serif", textAlign:"center", padding:"10px 0" }}>No comments yet. Be the first!</div>}
 
       {comments.map(c => (
         <div key={c.id} style={{ borderTop:"1px solid rgba(255,255,255,0.04)", paddingTop:10, marginTop:10 }}>
@@ -247,7 +247,7 @@ function Comments({ trackId, user, isAdmin, onAuthRequired }) {
 // ── DELEN ───────────────────────────────────────────────────
 function ShareButtons({ track }) {
   const url = encodeURIComponent(`https://bigtunes-radio.vercel.app`);
-  const text = encodeURIComponent(`🎵 Luister naar "${track.title}" van ${track.artist} op BIGTUNES RADIO!`);
+  const text = encodeURIComponent(`🎵 Listen to "${track.title}" of ${track.artist} on BIGTUNES RADIO!`);
 
   return (
     <div style={{ display:"flex", gap:8 }}>
@@ -257,7 +257,7 @@ function ShareButtons({ track }) {
       <a href={`https://www.instagram.com/`} target="_blank" rel="noreferrer" style={{ flex:1, background:"rgba(225,48,108,0.12)", border:"1px solid rgba(225,48,108,0.3)", borderRadius:10, padding:"10px", color:"#E1306C", fontFamily:"sans-serif", fontSize:13, fontWeight:700, textAlign:"center", textDecoration:"none" }}>
         📸 Instagram
       </a>
-      <button onClick={()=>navigator.clipboard?.writeText(`BIGTUNES RADIO — ${track.title} van ${track.artist}`)} style={{ flex:1, background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:10, padding:"10px", color:"#888", fontFamily:"sans-serif", fontSize:13, fontWeight:700, cursor:"pointer" }}>
+      <button onClick={()=>navigator.clipboard?.writeText(`BIGTUNES RADIO — ${track.title} of ${track.artist}`)} style={{ flex:1, background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:10, padding:"10px", color:"#888", fontFamily:"sans-serif", fontSize:13, fontWeight:700, cursor:"pointer" }}>
         🔗 Kopieer
       </button>
     </div>
@@ -288,15 +288,15 @@ function AdminPanel({ tracks, onDelete, onClose }) {
       <div style={{ maxWidth:420, margin:"0 auto", padding:"20px 20px 60px" }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:20 }}>
           <div>
-            <div style={{ fontSize:10, letterSpacing:2, color:"#9B6B3A", fontFamily:"sans-serif", fontWeight:700, marginBottom:2 }}>🔐 BEHEER</div>
-            <div style={{ fontSize:20, fontWeight:700, color:"#f0ede8" }}>Admin Paneel</div>
-            <div style={{ fontSize:11, color:"#555", fontFamily:"sans-serif" }}>{tracks.length} nummers totaal</div>
+            <div style={{ fontSize:10, letterSpacing:2, color:"#9B6B3A", fontFamily:"sans-serif", fontWeight:700, marginBottom:2 }}>🔐 ADMIN</div>
+            <div style={{ fontSize:20, fontWeight:700, color:"#f0ede8" }}>Admin Panel</div>
+            <div style={{ fontSize:11, color:"#555", fontFamily:"sans-serif" }}>{tracks.length} tracks total</div>
           </div>
-          <button onClick={onClose} style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:10, padding:"8px 14px", color:"#aaa", fontFamily:"sans-serif", fontSize:13, cursor:"pointer" }}>✕ Sluiten</button>
+          <button onClick={onClose} style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:10, padding:"8px 14px", color:"#aaa", fontFamily:"sans-serif", fontSize:13, cursor:"pointer" }}>✕ Close</button>
         </div>
 
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:8, marginBottom:16 }}>
-          {[["Nummers",tracks.length,"#9B6B3A"],["Vlammen",tracks.reduce((s,t)=>s+t.flames,0),"#D85A30"],["Likes",tracks.reduce((s,t)=>s+t.likes,0),"#7F77DD"]].map(([l,v,c])=>(
+          {[["Tracks",tracks.length,"#9B6B3A"],["Flames",tracks.reduce((s,t)=>s+t.flames,0),"#D85A30"],["Likes",tracks.reduce((s,t)=>s+t.likes,0),"#7F77DD"]].map(([l,v,c])=>(
             <div key={l} style={{ background:"rgba(12,5,2,0.8)", border:"1px solid rgba(155,107,58,0.1)", borderRadius:10, padding:"10px", textAlign:"center" }}>
               <div style={{ fontSize:18, fontWeight:700, color:c }}>{v}</div>
               <div style={{ fontSize:10, color:"#555", fontFamily:"sans-serif" }}>{l}</div>
@@ -304,7 +304,7 @@ function AdminPanel({ tracks, onDelete, onClose }) {
           ))}
         </div>
 
-        <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Zoek nummer of artiest..." style={{ width:"100%", background:"rgba(12,5,2,0.8)", border:"1px solid rgba(155,107,58,0.12)", borderRadius:9, padding:"10px 13px", color:"#f0ede8", fontFamily:"sans-serif", fontSize:13, boxSizing:"border-box", outline:"none", marginBottom:14 }}/>
+        <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search track or artist..." style={{ width:"100%", background:"rgba(12,5,2,0.8)", border:"1px solid rgba(155,107,58,0.12)", borderRadius:9, padding:"10px 13px", color:"#f0ede8", fontFamily:"sans-serif", fontSize:13, boxSizing:"border-box", outline:"none", marginBottom:14 }}/>
 
         {filtered.map(track => {
           const tc = COLOR_MAP[track.color]||COLOR_MAP.coral;
@@ -322,13 +322,13 @@ function AdminPanel({ tracks, onDelete, onClose }) {
               <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
                 {isConfirming ? (
                   <>
-                    <button onClick={()=>setConfirmId(null)} style={{ background:"rgba(255,255,255,0.06)", border:"none", borderRadius:8, padding:"6px 12px", color:"#888", fontFamily:"sans-serif", fontSize:12, cursor:"pointer" }}>Annuleer</button>
+                    <button onClick={()=>setConfirmId(null)} style={{ background:"rgba(255,255,255,0.06)", border:"none", borderRadius:8, padding:"6px 12px", color:"#888", fontFamily:"sans-serif", fontSize:12, cursor:"pointer" }}>Cancel</button>
                     <button onClick={()=>handleDelete(track)} disabled={deleting===track.id} style={{ background:"#D85A30", border:"none", borderRadius:8, padding:"6px 14px", color:"#fff", fontFamily:"sans-serif", fontSize:12, fontWeight:700, cursor:"pointer" }}>
-                      {deleting===track.id?"Bezig...":"Ja, verwijder"}
+                      {deleting===track.id?"Loading...":"Yes, delete"}
                     </button>
                   </>
                 ) : (
-                  <button onClick={()=>handleDelete(track)} style={{ background:"rgba(216,90,48,0.1)", border:"1px solid rgba(216,90,48,0.3)", borderRadius:8, padding:"6px 14px", color:"#D85A30", fontFamily:"sans-serif", fontSize:12, fontWeight:600, cursor:"pointer" }}>🗑 Verwijderen</button>
+                  <button onClick={()=>handleDelete(track)} style={{ background:"rgba(216,90,48,0.1)", border:"1px solid rgba(216,90,48,0.3)", borderRadius:8, padding:"6px 14px", color:"#D85A30", fontFamily:"sans-serif", fontSize:12, fontWeight:600, cursor:"pointer" }}>🗑 Delete</button>
                 )}
               </div>
             </div>
@@ -361,7 +361,7 @@ export default function App() {
   const [uploadError, setUploadError] = useState("");
   const [uploading, setUploading] = useState(false);
   const [toast, setToast] = useState(null);
-  const [filterGenre, setFilterGenre] = useState("Alles");
+  const [filterGenre, setFilterGenre] = useState("All");
   const [sort, setSort] = useState("flames");
   const [playlist, setPlaylist] = useState([]);
   const [playlistIndex, setPlaylistIndex] = useState(0);
@@ -476,7 +476,7 @@ export default function App() {
   }, [view, isLoadingMore, visibleCount]);
 
   const togglePlay = () => {
-    if (!currentTrack?.audio_url) { showToast("Geen audio beschikbaar","warn"); return; }
+    if (!currentTrack?.audio_url) { showToast("No audio available","warn"); return; }
     if (isPlaying) { audioRef.current.pause(); setIsPlaying(false); }
     else { audioRef.current.play().catch(()=>{}); setIsPlaying(true); }
   };
@@ -487,14 +487,14 @@ export default function App() {
     else { const p=(playlistIndex-1+playlist.length)%playlist.length; setPlaylistIndex(p); setCurrentTime(0); if(isPlaying) setTimeout(()=>audioRef.current?.play().catch(()=>{}),80); }
   };
   const jumpToTrack = (track) => { const idx=playlist.findIndex(t=>t.id===track.id); if(idx>=0){setPlaylistIndex(idx);setCurrentTime(0);setIsPlaying(true);setTimeout(()=>audioRef.current?.play().catch(()=>{}),80);} };
-  const reshufflePlaylist = () => { setPlaylist(shuffle(tracks)); setPlaylistIndex(0); setIsPlaying(false); audioRef.current?.pause(); showToast("🔀 Playlist herschud!"); };
+  const reshufflePlaylist = () => { setPlaylist(shuffle(tracks)); setPlaylistIndex(0); setIsPlaying(false); audioRef.current?.pause(); showToast("🔀 Playlist reshuffled!"); };
 
   const vote = async (trackId, type) => {
     if (!user) { setShowAuth(true); return; }
     const cooldownKey = `${trackId}_${type}`;
     const lastVote = voteCooldowns[cooldownKey];
     if (lastVote && Date.now() - lastVote < VOTE_COOLDOWN_MS) {
-      showToast(`Wacht even voor je opnieuw stemt!`, "warn"); return;
+      showToast(`Wait before voting again!`, "warn"); return;
     }
     setVoteCooldowns(prev => ({ ...prev, [cooldownKey]: Date.now() }));
     await supabase.from("votes").insert({ track_id:trackId, user_id:user.id, vote_type:type });
@@ -503,23 +503,23 @@ export default function App() {
     type==="flame" ? newFlames.add(trackId) : newLikes.add(trackId);
     setUserVotes({flames:newFlames, likes:newLikes});
     setTracks(prev => prev.map(t => t.id === trackId ? { ...t, flames: type==="flame" ? t.flames+1 : t.flames, likes: type==="like" ? t.likes+1 : t.likes } : t));
-    showToast(type==="flame"?"🔥 Vlam gegeven!":"❤️ Like gegeven!");
+    showToast(type==="flame"?"🔥 Flame given!":"❤️ Like given!");
   };
 
   // Upload
   const handleFileSelect = (e) => {
     const file = e.target.files[0]; if (!file) return;
-    if (!file.name.match(/\.mp3$/i) && file.type !== "audio/mpeg") { setUploadError("Alleen MP3 bestanden."); return; }
+    if (!file.name.match(/\.mp3$/i) && file.type !== "audio/mpeg") { setUploadError("Allen MP3 bestanden."); return; }
     if (file.size > MAX_FILE_MB*1024*1024) { setUploadError(`Max ${MAX_FILE_MB} MB.`); return; }
     setUploadError(""); setUploadFile(file);
   };
 
   const checkAndUpload = async () => {
     if (!user) { setShowAuth(true); return; }
-    if (!uploadData.title||!uploadData.artist||!uploadData.genre||!uploadData.bio) { setUploadError("Vul alle velden in."); return; }
-    if (uploadData.bio.length<20) { setUploadError("Bio minimaal 20 tekens."); return; }
-    if (!uploadFile) { setUploadError("Kies een MP3 bestand."); return; }
-    if (!isAdmin && uploadCount>=MAX_TRACKS) { setUploadError("Maximum van 3 nummers bereikt."); return; }
+    if (!uploadData.title||!uploadData.artist||!uploadData.genre||!uploadData.bio) { setUploadError("Please fill in all fields."); return; }
+    if (uploadData.bio.length<20) { setUploadError("Bio minimaal 20 characters."); return; }
+    if (!uploadFile) { setUploadError("Choose an MP3 file."); return; }
+    if (!isAdmin && uploadCount>=MAX_TRACKS) { setUploadError("Maximum of 3 nummers bereikt."); return; }
 
     if (!isAdmin && uploadCount >= FREE_TRACKS) {
       setPendingUpload(true);
@@ -548,9 +548,9 @@ export default function App() {
       if (de) throw de;
       setUploadData({title:"",artist:"",genre:"",bio:"",color:"blue",isAmateur:true});
       setUploadFile(null); setUploadStep(1); setView("radio");
-      showToast("🎵 Nummer live op BIGTUNES Radio!");
+      showToast("🎵 Track live on BIGTUNES Radio!");
       loadTracks();
-    } catch (err) { setUploadError("Upload mislukt: "+err.message); }
+    } catch (err) { setUploadError("Upload failed: "+err.message); }
     finally { setUploading(false); setShowPayment(false); setPendingUpload(null); }
   };
 
@@ -559,12 +559,12 @@ export default function App() {
     await supabase.from("votes").delete().eq("track_id",track.id);
     await supabase.from("comments").delete().eq("track_id",track.id);
     await supabase.from("tracks").delete().eq("id",track.id);
-    showToast(`🗑 "${track.title}" verwijderd`);
+    showToast(`🗑 "${track.title}" deleted`);
     loadTracks();
   };
 
   const showToast = (msg, type="success") => { setToast({msg,type}); setTimeout(()=>setToast(null),3000); };
-  const logout = async () => { await supabase.auth.signOut(); setUser(null); setIsAdmin(false); showToast("Uitgelogd"); };
+  const logout = async () => { await supabase.auth.signOut(); setUser(null); setIsAdmin(false); showToast("Logged out"); };
 
   // Charts
   const thisWeek = getWeek();
@@ -573,7 +573,7 @@ export default function App() {
   const monthlyTracks = [...tracks].sort((a,b)=>(b.flames+b.likes)-(a.flames+a.likes));
 
   const sortedTracks = [...tracks]
-    .filter(t=>filterGenre==="Alles"||t.genre===filterGenre)
+    .filter(t=>filterGenre==="All"||t.genre===filterGenre)
     .sort((a,b)=>{ if(sort==="flames") return (b.flames+b.likes*0.5)-(a.flames+a.likes*0.5); if(sort==="likes") return b.likes-a.likes; if(sort==="new") return new Date(b.created_at)-new Date(a.created_at); return 0; })
     .map((t,i)=>({...t,rank:i+1}));
 
@@ -633,19 +633,19 @@ export default function App() {
               On Air · Live &nbsp;·&nbsp; 👥 {liveListeners} live
             </div>
             <div style={{ fontSize:24,fontWeight:700,color:"#f0ede8",lineHeight:1,letterSpacing:-1 }}>BIG<span style={{ color:"#9B6B3A" }}>TUNES</span> RADIO</div>
-            <div style={{ fontSize:10,color:"rgba(255,255,255,0.3)",fontFamily:"sans-serif",marginTop:2 }}>Jouw muziek. Jouw podium. Geen filters.</div>
+            <div style={{ fontSize:10,color:"rgba(255,255,255,0.3)",fontFamily:"sans-serif",marginTop:2 }}>Your music. Your stage. No filters.</div>
           </div>
           <div style={{ textAlign:"right" }}>
             {user ? (
               <div>
                 <div style={{ fontSize:11,color:isAdmin?"#9B6B3A":"#1D9E75",fontFamily:"sans-serif",marginBottom:4 }}>{isAdmin?"🔐 Admin":"✓"} {user.email.split("@")[0]}</div>
                 <div style={{ display:"flex",gap:6,justifyContent:"flex-end" }}>
-                  {isAdmin&&<button onClick={()=>setShowAdmin(true)} style={{ background:"rgba(155,107,58,0.15)",border:"1px solid rgba(155,107,58,0.4)",borderRadius:8,padding:"5px 10px",color:"#9B6B3A",fontFamily:"sans-serif",fontSize:11,fontWeight:700,cursor:"pointer" }}>🔐 Beheer</button>}
-                  <button onClick={logout} style={{ background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:8,padding:"5px 10px",color:"#555",fontFamily:"sans-serif",fontSize:11,cursor:"pointer" }}>Uitloggen</button>
+                  {isAdmin&&<button onClick={()=>setShowAdmin(true)} style={{ background:"rgba(155,107,58,0.15)",border:"1px solid rgba(155,107,58,0.4)",borderRadius:8,padding:"5px 10px",color:"#9B6B3A",fontFamily:"sans-serif",fontSize:11,fontWeight:700,cursor:"pointer" }}>🔐 Admin</button>}
+                  <button onClick={logout} style={{ background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:8,padding:"5px 10px",color:"#555",fontFamily:"sans-serif",fontSize:11,cursor:"pointer" }}>Logout</button>
                 </div>
               </div>
             ) : (
-              <button onClick={()=>setShowAuth(true)} style={{ background:"#9B6B3A",border:"none",borderRadius:10,padding:"8px 14px",color:"#fff",fontFamily:"sans-serif",fontSize:12,fontWeight:700,cursor:"pointer" }}>Inloggen</button>
+              <button onClick={()=>setShowAuth(true)} style={{ background:"#9B6B3A",border:"none",borderRadius:10,padding:"8px 14px",color:"#fff",fontFamily:"sans-serif",fontSize:12,fontWeight:700,cursor:"pointer" }}>Login</button>
             )}
           </div>
         </div>
@@ -655,15 +655,15 @@ export default function App() {
       <div style={{ margin:"12px 20px 0", position:"relative", zIndex:1 }}>
         <a href="https://www.bax-shop.nl/" target="_blank" rel="noopener noreferrer" style={{ textDecoration:"none", display:"block" }}>
           <div style={{ background:"rgba(8,3,1,0.85)", border:"1px solid rgba(255,102,0,0.4)", borderRadius:14, padding:"11px 14px", backdropFilter:"blur(12px)", display:"flex", alignItems:"center", gap:12, transition:"border-color 0.2s" }}
-            onMouseOver={e=>e.currentTarget.style.borderColor="rgba(255,102,0,0.8)"}
+            onMouseAbout={e=>e.currentTarget.style.borderColor="rgba(255,102,0,0.8)"}
             onMouseOut={e=>e.currentTarget.style.borderColor="rgba(255,102,0,0.4)"}>
             <div style={{ width:44, height:44, borderRadius:10, background:"#FF6600", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, fontWeight:900, fontSize:15, color:"#fff", fontFamily:"sans-serif", letterSpacing:-0.5 }}>BAX</div>
             <div style={{ flex:1, minWidth:0 }}>
-              <div style={{ fontSize:9, letterSpacing:1, color:"#FF6600", fontFamily:"sans-serif", fontWeight:700, textTransform:"uppercase", marginBottom:2 }}>Gesponsord</div>
-              <div style={{ fontSize:13, fontWeight:700, color:"#f0ede8", fontFamily:"sans-serif" }}>Bax Music — Jouw muziekwinkel</div>
+              <div style={{ fontSize:9, letterSpacing:1, color:"#FF6600", fontFamily:"sans-serif", fontWeight:700, textTransform:"uppercase", marginBottom:2 }}>Sponsored</div>
+              <div style={{ fontSize:13, fontWeight:700, color:"#f0ede8", fontFamily:"sans-serif" }}>Bax Music — Your music store</div>
               <div style={{ fontSize:11, color:"#888", fontFamily:"sans-serif" }}>Pro audio, DJ gear, studio & instruments</div>
             </div>
-            <div style={{ fontSize:11, color:"#FF6600", fontFamily:"sans-serif", fontWeight:700, flexShrink:0 }}>Bezoek →</div>
+            <div style={{ fontSize:11, color:"#FF6600", fontFamily:"sans-serif", fontWeight:700, flexShrink:0 }}>Visit →</div>
           </div>
         </a>
       </div>
@@ -672,12 +672,12 @@ export default function App() {
       <div style={{ margin:"14px 20px 0", position:"relative", zIndex:1 }}>
         <div style={{ background:"rgba(8,3,1,0.85)",border:`1px solid ${c.accent}40`,borderRadius:20,padding:"16px",backdropFilter:"blur(14px)" }}>
           <div style={{ fontSize:9,letterSpacing:2,color:c.accent,fontFamily:"sans-serif",fontWeight:700,textTransform:"uppercase",marginBottom:10 }}>
-            {isPlaying?`▶ Nu speelt — #${playlistIndex+1} van ${playlist.length}`:`⏸ Gepauzeerd — #${playlistIndex+1} van ${playlist.length}`}
+            {isPlaying?`▶ Now playing — #${playlistIndex+1} of ${playlist.length}`:`⏸ Paused — #${playlistIndex+1} of ${playlist.length}`}
           </div>
           <div style={{ display:"flex",alignItems:"center",gap:12,marginBottom:12 }}>
             <div style={{ width:50,height:50,borderRadius:12,background:`${c.accent}25`,border:`1px solid ${c.accent}35`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0 }}>{isPlaying?"🎵":"⏸"}</div>
             <div style={{ flex:1,minWidth:0 }}>
-              <div style={{ fontSize:15,fontWeight:700,color:"#f0ede8",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>{currentTrack?.title||(loading?"Laden...":"Geen nummers")}</div>
+              <div style={{ fontSize:15,fontWeight:700,color:"#f0ede8",whiteSpace:"nowrap",overflow:"hidden",textAboutflow:"ellipsis" }}>{currentTrack?.title||(loading?"Laden...":"Geen nummers")}</div>
               <div style={{ fontSize:12,color:"#999",fontFamily:"sans-serif" }}>{currentTrack?.artist} · {currentTrack?.genre}</div>
             </div>
           </div>
@@ -700,7 +700,7 @@ export default function App() {
           </div>
           {playlist.length>1&&(
             <div style={{ marginTop:12,paddingTop:10,borderTop:"1px solid rgba(255,255,255,0.04)" }}>
-              <div style={{ fontSize:9,color:"#444",fontFamily:"sans-serif",marginBottom:5,letterSpacing:1 }}>HIERNA IN DE PLAYLIST</div>
+              <div style={{ fontSize:9,color:"#444",fontFamily:"sans-serif",marginBottom:5,letterSpacing:1 }}>UP NEXT</div>
               <div style={{ display:"flex",gap:5,overflowX:"auto",paddingBottom:2 }}>
                 {playlist.slice(playlistIndex+1,playlistIndex+5).map(t=>{
                   const tc=COLOR_MAP[t.color]||COLOR_MAP.coral;
@@ -714,7 +714,7 @@ export default function App() {
 
       {/* Nav */}
       <div style={{ display:"flex",gap:4,padding:"12px 20px 0",position:"relative",zIndex:1 }}>
-        {[["radio","📡","Station"],["chart","🏆","Charts"],["upload","⬆","Upload"],["about","ℹ️","Over"]].map(([v,icon,label])=>(
+        {[["radio","📡","Station"],["chart","🏆","Charts"],["upload","⬆","Upload"],["about","ℹ️","About"]].map(([v,icon,label])=>(
           <button key={v} onClick={()=>{setView(v);setUploadStep(1);}} style={{ flex:1,padding:"8px 4px",background:view===v&&view!=="detail"?"#9B6B3A":"rgba(255,255,255,0.06)",border:"none",borderRadius:10,color:view===v&&view!=="detail"?"#fff":"#777",fontFamily:"sans-serif",fontSize:12,fontWeight:600,cursor:"pointer" }}>
             {icon} {label}
           </button>
@@ -726,7 +726,7 @@ export default function App() {
       <div className="desktop-right">
       {/* Content */}
       <div style={{ padding:"14px 20px 60px",position:"relative",zIndex:1 }}>
-        {loading&&<div style={{ textAlign:"center",padding:"40px 0",color:"#555",fontFamily:"sans-serif",fontSize:13 }}>Nummers laden...</div>}
+        {loading&&<div style={{ textAlign:"center",padding:"40px 0",color:"#555",fontFamily:"sans-serif",fontSize:13 }}>Tracks laden...</div>}
 
         {/* STATION */}
         {!loading&&view==="radio"&&(
@@ -734,32 +734,32 @@ export default function App() {
             {topTrack&&(
               <div style={{ background:"rgba(8,3,1,0.85)",border:"1px solid rgba(155,107,58,0.5)",borderRadius:16,padding:"14px",marginBottom:14,position:"relative",overflow:"hidden",backdropFilter:"blur(10px)" }}>
                 <div style={{ position:"absolute",top:-15,right:-15,fontSize:65,opacity:0.06 }}>⭐</div>
-                <div style={{ fontSize:9,letterSpacing:2,color:"#9B6B3A",fontFamily:"sans-serif",fontWeight:700,marginBottom:6 }}>⭐ ARTIEST VAN DE MAAND</div>
+                <div style={{ fontSize:9,letterSpacing:2,color:"#9B6B3A",fontFamily:"sans-serif",fontWeight:700,marginBottom:6 }}>⭐ ARTIST OF THE MONTH</div>
                 <div style={{ fontSize:20,fontWeight:700,color:"#f0ede8" }}>{topTrack.artist}</div>
                 <div style={{ fontSize:12,color:"#999",fontFamily:"sans-serif",marginTop:2,marginBottom:10 }}>{topTrack.genre} · {topTrack.month}</div>
                 <div style={{ background:"rgba(255,255,255,0.04)",border:"1px solid rgba(155,107,58,0.15)",borderRadius:10,padding:"9px 12px",marginBottom:10,cursor:"pointer" }} onClick={()=>{setSelectedTrack(topTrack);setView("detail");}}>
-                  <div style={{ fontSize:11,color:"#777",fontFamily:"sans-serif",marginBottom:2 }}>Beste track</div>
+                  <div style={{ fontSize:11,color:"#777",fontFamily:"sans-serif",marginBottom:2 }}>Top track</div>
                   <div style={{ fontSize:13,fontWeight:700,color:"#f0ede8" }}>{topTrack.title}</div>
                 </div>
                 <div style={{ display:"flex",gap:10,alignItems:"center" }}>
-                  <span style={{ fontSize:12,fontFamily:"sans-serif",color:"#D85A30" }}>🔥 {topTrack.flames} vlammen</span>
+                  <span style={{ fontSize:12,fontFamily:"sans-serif",color:"#D85A30" }}>🔥 {topTrack.flames} flames</span>
                   <span style={{ fontSize:12,fontFamily:"sans-serif",color:"#AFA9EC" }}>❤️ {topTrack.likes} likes</span>
                   <button onClick={e=>{e.stopPropagation();jumpToTrack(topTrack);}} style={{ marginLeft:"auto",background:"#9B6B3A",border:"none",borderRadius:"50%",width:30,height:30,color:"#fff",fontSize:12,cursor:"pointer" }}>▶</button>
-                  <a href={"https://wa.me/?text="+encodeURIComponent("⭐ Artiest van de maand: "+topTrack.artist+" op BIGTUNES RADIO! 👉 https://bigtunes-radio.vercel.app")} target="_blank" rel="noreferrer" style={{ background:"rgba(37,211,102,0.12)",border:"1px solid rgba(37,211,102,0.3)",borderRadius:18,padding:"5px 10px",color:"#25D366",fontFamily:"sans-serif",fontSize:12,textDecoration:"none" }}>📱 Deel</a>
+                  <a href={"https://wa.me/?text="+encodeURIComponent("⭐ Artiest of de maand: "+topTrack.artist+" on BIGTUNES RADIO! 👉 https://bigtunes-radio.vercel.app")} target="_blank" rel="noreferrer" style={{ background:"rgba(37,211,102,0.12)",border:"1px solid rgba(37,211,102,0.3)",borderRadius:18,padding:"5px 10px",color:"#25D366",fontFamily:"sans-serif",fontSize:12,textDecoration:"none" }}>📱 Share</a>
                 </div>
               </div>
             )}
 
             <div style={{ display:"flex",gap:6,marginBottom:10,overflowX:"auto",paddingBottom:2 }}>
-              {["Alles",...GENRES.slice(0,5)].map(g=><button key={g} onClick={()=>setFilterGenre(g)} style={{ whiteSpace:"nowrap",padding:"4px 11px",background:filterGenre===g?"#1D9E75":"rgba(255,255,255,0.05)",border:"none",borderRadius:18,color:filterGenre===g?"#fff":"#777",fontFamily:"sans-serif",fontSize:11,cursor:"pointer",flexShrink:0 }}>{g}</button>)}
+              {["All",...GENRES.slice(0,5)].map(g=><button key={g} onClick={()=>setFilterGenre(g)} style={{ whiteSpace:"nowrap",padding:"4px 11px",background:filterGenre===g?"#1D9E75":"rgba(255,255,255,0.05)",border:"none",borderRadius:18,color:filterGenre===g?"#fff":"#777",fontFamily:"sans-serif",fontSize:11,cursor:"pointer",flexShrink:0 }}>{g}</button>)}
             </div>
             <div style={{ display:"flex",gap:4,marginBottom:12 }}>
-              {[["flames","🔥 Vlammen"],["likes","❤️ Likes"],["new","✨ Nieuw"]].map(([s,label])=>(
+              {[["flames","🔥 Flames"],["likes","❤️ Likes"],["new","✨ New"]].map(([s,label])=>(
                 <button key={s} onClick={()=>setSort(s)} style={{ padding:"3px 9px",background:sort===s?"rgba(155,107,58,0.15)":"transparent",border:sort===s?"1px solid #9B6B3A":"1px solid rgba(255,255,255,0.07)",borderRadius:7,color:sort===s?"#9B6B3A":"#555",fontFamily:"sans-serif",fontSize:11,cursor:"pointer" }}>{label}</button>
               ))}
             </div>
 
-            {tracks.length===0&&<div style={{ textAlign:"center",padding:"40px 20px",color:"#555",fontFamily:"sans-serif" }}><div style={{ fontSize:32,marginBottom:10 }}>🎵</div><div>Nog geen nummers. Wees de eerste!</div></div>}
+            {tracks.length===0&&<div style={{ textAlign:"center",padding:"40px 20px",color:"#555",fontFamily:"sans-serif" }}><div style={{ fontSize:32,marginBottom:10 }}>🎵</div><div>No tracks yet. Be the first!</div></div>}
 
             {/* ── Infinite scroll: alleen visibleTracks renderen ── */}
             {visibleTracks.map((track,i)=>{
@@ -774,7 +774,7 @@ export default function App() {
                       {nowPlaying?(isPlaying?"♫":"⏸"):(i<3?["🥇","🥈","🥉"][i]:`#${i+1}`)}
                     </div>
                     <div style={{ flex:1,minWidth:0 }}>
-                      <div style={{ fontSize:14,fontWeight:700,color:nowPlaying?tc.accent:"#f0ede8",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>{track.title}</div>
+                      <div style={{ fontSize:14,fontWeight:700,color:nowPlaying?tc.accent:"#f0ede8",whiteSpace:"nowrap",overflow:"hidden",textAboutflow:"ellipsis" }}>{track.title}</div>
                       <div style={{ fontSize:11,color:"#666",fontFamily:"sans-serif" }}>{track.artist} · {track.genre}</div>
                     </div>
                     <button onClick={e=>{e.stopPropagation();jumpToTrack(track);}} style={{ width:30,height:30,borderRadius:"50%",background:nowPlaying&&isPlaying?tc.accent:"rgba(255,255,255,0.07)",border:"none",color:nowPlaying&&isPlaying?"#fff":"#888",fontSize:12,cursor:"pointer",flexShrink:0 }}>
@@ -785,7 +785,7 @@ export default function App() {
                   <div style={{ display:"flex",gap:7,marginTop:9,paddingTop:8,borderTop:"1px solid rgba(255,255,255,0.04)" }}>
                     <button onClick={e=>{e.stopPropagation();vote(track.id,"flame");}} style={BtnStyle(hasFlame,"#D85A30")}>🔥 {track.flames}</button>
                     <button onClick={e=>{e.stopPropagation();vote(track.id,"like");}} style={BtnStyle(hasLike,"#7F77DD")}>❤️ {track.likes}</button>
-                    <a href={`https://wa.me/?text=${encodeURIComponent(`🎵 "${track.title}" van ${track.artist} op BIGTUNES RADIO! 👉 https://bigtunes-radio.vercel.app`)}`} target="_blank" rel="noreferrer" onClick={e=>e.stopPropagation()} style={{ display:"flex",alignItems:"center",gap:4,background:"transparent",border:"1px solid rgba(37,211,102,0.3)",borderRadius:20,padding:"3px 10px",color:"#25D366",fontFamily:"sans-serif",fontSize:12,textDecoration:"none",marginLeft:"auto" }}>📱 Deel</a>
+                    <a href={`https://wa.me/?text=${encodeURIComponent(`🎵 "${track.title}" of ${track.artist} on BIGTUNES RADIO! 👉 https://bigtunes-radio.vercel.app`)}`} target="_blank" rel="noreferrer" onClick={e=>e.stopPropagation()} style={{ display:"flex",alignItems:"center",gap:4,background:"transparent",border:"1px solid rgba(37,211,102,0.3)",borderRadius:20,padding:"3px 10px",color:"#25D366",fontFamily:"sans-serif",fontSize:12,textDecoration:"none",marginLeft:"auto" }}>📱 Share</a>
                   </div>
                 </div>
               );
@@ -796,12 +796,12 @@ export default function App() {
             {isLoadingMore && (
               <div style={{ textAlign:"center", padding:"16px 0", color:"#555", fontFamily:"sans-serif", fontSize:13, display:"flex", alignItems:"center", justifyContent:"center", gap:8 }}>
                 <div style={{ width:16, height:16, border:"2px solid rgba(155,107,58,0.3)", borderTopColor:"#9B6B3A", borderRadius:"50%", animation:"spin 0.7s linear infinite" }}/>
-                Meer nummers laden...
+                Loading more tracks...
               </div>
             )}
             {!hasMore && sortedTracks.length > TRACKS_PER_PAGE && (
               <div style={{ textAlign:"center", padding:"16px 0", color:"#444", fontFamily:"sans-serif", fontSize:12 }}>
-                ✓ Alle {sortedTracks.length} nummers geladen
+                ✓ All {sortedTracks.length} tracks loaded
               </div>
             )}
           </div>
@@ -813,8 +813,8 @@ export default function App() {
             <div style={{ marginBottom:16 }}>
               <div style={{ fontSize:19,fontWeight:700,color:"#f0ede8",marginBottom:8 }}>🏆 Charts</div>
               <div style={{ display:"flex",gap:6 }}>
-                <button onClick={()=>setChartPeriod("week")} style={{ flex:1,padding:"8px",background:chartPeriod==="week"?"#9B6B3A":"rgba(255,255,255,0.06)",border:"none",borderRadius:10,color:chartPeriod==="week"?"#fff":"#777",fontFamily:"sans-serif",fontSize:12,fontWeight:600,cursor:"pointer" }}>📅 Deze week</button>
-                <button onClick={()=>setChartPeriod("month")} style={{ flex:1,padding:"8px",background:chartPeriod==="month"?"#9B6B3A":"rgba(255,255,255,0.06)",border:"none",borderRadius:10,color:chartPeriod==="month"?"#fff":"#777",fontFamily:"sans-serif",fontSize:12,fontWeight:600,cursor:"pointer" }}>🗓 Deze maand</button>
+                <button onClick={()=>setChartPeriod("week")} style={{ flex:1,padding:"8px",background:chartPeriod==="week"?"#9B6B3A":"rgba(255,255,255,0.06)",border:"none",borderRadius:10,color:chartPeriod==="week"?"#fff":"#777",fontFamily:"sans-serif",fontSize:12,fontWeight:600,cursor:"pointer" }}>📅 This week</button>
+                <button onClick={()=>setChartPeriod("month")} style={{ flex:1,padding:"8px",background:chartPeriod==="month"?"#9B6B3A":"rgba(255,255,255,0.06)",border:"none",borderRadius:10,color:chartPeriod==="month"?"#fff":"#777",fontFamily:"sans-serif",fontSize:12,fontWeight:600,cursor:"pointer" }}>🗓 This month</button>
               </div>
             </div>
 
@@ -834,7 +834,7 @@ export default function App() {
                     </div>
                     <div style={{ display:"flex",alignItems:"center",gap:6 }}>
                       <span style={{ fontSize:11,fontFamily:"sans-serif",color:"#888" }}>🔥{track.flames} ❤️{track.likes}</span>
-                      {isAdmin&&<button onClick={e=>{e.stopPropagation();if(window.confirm(`Verwijderen?`))adminDeleteTrack(track);}} style={{ background:"rgba(216,90,48,0.1)",border:"none",borderRadius:6,padding:"3px 7px",color:"#D85A30",fontSize:11,cursor:"pointer" }}>🗑</button>}
+                      {isAdmin&&<button onClick={e=>{e.stopPropagation();if(window.confirm(`Delete?`))adminDeleteTrack(track);}} style={{ background:"rgba(216,90,48,0.1)",border:"none",borderRadius:6,padding:"3px 7px",color:"#D85A30",fontSize:11,cursor:"pointer" }}>🗑</button>}
                     </div>
                   </div>
                   <div style={{ height:4,background:"rgba(255,255,255,0.05)",borderRadius:4,overflow:"hidden" }}>
@@ -845,11 +845,11 @@ export default function App() {
             })}
 
             {chartPeriod==="week"&&weeklyTracks.length===0&&(
-              <div style={{ textAlign:"center",padding:"30px 0",color:"#555",fontFamily:"sans-serif",fontSize:13 }}>Nog geen nummers deze week geüpload.</div>
+              <div style={{ textAlign:"center",padding:"30px 0",color:"#555",fontFamily:"sans-serif",fontSize:13 }}>No tracks uploaded this week yet.</div>
             )}
 
             <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:9,marginTop:18 }}>
-              {[["Nummers",tracks.length],["Vlammen",tracks.reduce((s,t)=>s+t.flames,0)],["Likes",tracks.reduce((s,t)=>s+t.likes,0)],["Artiesten",new Set(tracks.map(t=>t.artist)).size]].map(([l,v])=>(
+              {[["Tracks",tracks.length],["Flames",tracks.reduce((s,t)=>s+t.flames,0)],["Likes",tracks.reduce((s,t)=>s+t.likes,0)],["Artists",new Set(tracks.map(t=>t.artist)).size]].map(([l,v])=>(
                 <div key={l} style={{ background:"rgba(12,5,2,0.6)",border:"1px solid rgba(155,107,58,0.07)",borderRadius:11,padding:"11px 13px" }}>
                   <div style={{ fontSize:10,color:"#555",fontFamily:"sans-serif",marginBottom:3 }}>{l}</div>
                   <div style={{ fontSize:20,fontWeight:700,color:"#f0ede8" }}>{v}</div>
@@ -863,63 +863,63 @@ export default function App() {
         {view==="upload"&&(
           <div>
             <div style={{ marginBottom:16 }}>
-              <div style={{ fontSize:19,fontWeight:700,color:"#f0ede8",marginBottom:2 }}>⬆ Upload je nummer</div>
+              <div style={{ fontSize:19,fontWeight:700,color:"#f0ede8",marginBottom:2 }}>⬆ Upload your track</div>
               <div style={{ fontSize:11,color:"#555",fontFamily:"sans-serif",marginBottom:8 }}>Independent artists only · MP3 · Max. 3 MB</div>
 
               <div style={{ background:"rgba(155,107,58,0.08)",border:"1px solid rgba(155,107,58,0.2)",borderRadius:10,padding:"10px 12px",marginBottom:8 }}>
-                <div style={{ fontSize:12,fontFamily:"sans-serif",color:"#9B6B3A",fontWeight:700,marginBottom:4 }}>📋 Upload regels</div>
+                <div style={{ fontSize:12,fontFamily:"sans-serif",color:"#9B6B3A",fontWeight:700,marginBottom:4 }}>📋 Upload rules</div>
                 <div style={{ fontSize:11,fontFamily:"sans-serif",color:"#888",lineHeight:1.6 }}>
-                  ✅ Uploaden — <strong style={{ color:"#1D9E75" }}>Gratis</strong><br/>
-                  🎵 Maximum 3 nummers per artiest<br/>
+                  ✅ Uploaden — <strong style={{ color:"#1D9E75" }}>Free</strong><br/>
+                  🎵 Maximum 3 tracks per artist<br/>
                   🎤 Independent & unsigned artists only
                 </div>
               </div>
 
               {user&&!isAdmin&&<div style={{ background:"rgba(29,158,117,0.1)",border:"1px solid rgba(29,158,117,0.3)",borderRadius:9,padding:"7px 12px",fontSize:12,fontFamily:"sans-serif",color:"#5DCAA5" }}>
-                Jouw uploads: {uploadCount}/{MAX_TRACKS} {uploadCount>=FREE_TRACKS&&!isAdmin?`· Volgende kost €${PRICE_PER_TRACK}`:""}
+                Your uploads: {uploadCount}/{MAX_TRACKS} {uploadCount>=FREE_TRACKS&&!isAdmin?`· Next costs €${PRICE_PER_TRACK}`:""}
               </div>}
-              {isAdmin&&<div style={{ background:"rgba(155,107,58,0.1)",border:"1px solid rgba(155,107,58,0.3)",borderRadius:9,padding:"7px 12px",fontSize:12,fontFamily:"sans-serif",color:"#9B6B3A" }}>🔐 Admin — onbeperkt uploaden</div>}
+              {isAdmin&&<div style={{ background:"rgba(155,107,58,0.1)",border:"1px solid rgba(155,107,58,0.3)",borderRadius:9,padding:"7px 12px",fontSize:12,fontFamily:"sans-serif",color:"#9B6B3A" }}>🔐 Admin — unlimited uploads</div>}
               {!user&&<div style={{ marginTop:8,background:"rgba(216,90,48,0.1)",border:"1px solid rgba(216,90,48,0.3)",borderRadius:9,padding:"10px 12px" }}>
-                <div style={{ fontSize:13,color:"#D85A30",fontFamily:"sans-serif",marginBottom:6 }}>Log in om te uploaden</div>
-                <button onClick={()=>setShowAuth(true)} style={{ background:"#9B6B3A",border:"none",borderRadius:8,padding:"8px 16px",color:"#fff",fontFamily:"sans-serif",fontSize:13,fontWeight:700,cursor:"pointer" }}>Inloggen / Aanmelden</button>
+                <div style={{ fontSize:13,color:"#D85A30",fontFamily:"sans-serif",marginBottom:6 }}>Login to upload</div>
+                <button onClick={()=>setShowAuth(true)} style={{ background:"#9B6B3A",border:"none",borderRadius:8,padding:"8px 16px",color:"#fff",fontFamily:"sans-serif",fontSize:13,fontWeight:700,cursor:"pointer" }}>Login / Aanmelden</button>
               </div>}
             </div>
 
-            {user&&!isAdmin&&uploadCount>=MAX_TRACKS&&<div style={{ background:"rgba(216,90,48,0.1)",border:"1px solid rgba(216,90,48,0.3)",borderRadius:12,padding:"20px",textAlign:"center",fontFamily:"sans-serif" }}><div style={{ fontSize:28,marginBottom:8 }}>🎵</div><div style={{ fontSize:14,color:"#D85A30",fontWeight:600 }}>Maximum van 3 nummers bereikt</div></div>}
+            {user&&!isAdmin&&uploadCount>=MAX_TRACKS&&<div style={{ background:"rgba(216,90,48,0.1)",border:"1px solid rgba(216,90,48,0.3)",borderRadius:12,padding:"20px",textAlign:"center",fontFamily:"sans-serif" }}><div style={{ fontSize:28,marginBottom:8 }}>🎵</div><div style={{ fontSize:14,color:"#D85A30",fontWeight:600 }}>Maximum of 3 nummers bereikt</div></div>}
 
             {user&&(isAdmin||uploadCount<MAX_TRACKS)&&(
               <div>
                 <div style={{ display:"flex",alignItems:"center",gap:5,marginBottom:16 }}>
                   {[1,2,3].map(s=><div key={s} style={{ display:"flex",alignItems:"center",gap:5 }}><div style={{ width:24,height:24,borderRadius:"50%",background:uploadStep>=s?"#9B6B3A":"rgba(255,255,255,0.06)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontFamily:"sans-serif",fontWeight:700,color:uploadStep>=s?"#fff":"#444" }}>{s}</div>{s<3&&<div style={{ width:18,height:2,background:uploadStep>s?"#9B6B3A":"rgba(255,255,255,0.06)" }}/>}</div>)}
-                  <div style={{ fontSize:11,color:"#555",fontFamily:"sans-serif",marginLeft:5 }}>{uploadStep===1?"Basisinfo":uploadStep===2?"Bio & stijl":"Audio"}</div>
+                  <div style={{ fontSize:11,color:"#555",fontFamily:"sans-serif",marginLeft:5 }}>{uploadStep===1?"Basic info":uploadStep===2?"Bio & style":"Audio"}</div>
                 </div>
 
                 {uploadStep===1&&(
                   <div style={{ display:"flex",flexDirection:"column",gap:11 }}>
-                    {[["Naam van het nummer","title","bijv. Nachtrit door de Stad"],["Artiestennaam","artist","Jouw naam of bandnaam"]].map(([label,key,ph])=>(
+                    {[["Naam of het nummer","title","e.g. Night Ride through the City"],["Artistsnaam","artist","Your name or band name"]].map(([label,key,ph])=>(
                       <div key={key}><div style={{ fontSize:11,color:"#777",fontFamily:"sans-serif",marginBottom:4 }}>{label} *</div><input value={uploadData[key]} onChange={e=>setUploadData(p=>({...p,[key]:e.target.value}))} placeholder={ph} style={inp}/></div>
                     ))}
                     <div><div style={{ fontSize:11,color:"#777",fontFamily:"sans-serif",marginBottom:4 }}>Genre *</div>
                     <select value={uploadData.genre} onChange={e=>setUploadData(p=>({...p,genre:e.target.value}))} style={{ ...inp,color:uploadData.genre?"#f0ede8":"#555" }}>
-                      <option value="">Kies genre...</option>{GENRES.map(g=><option key={g} value={g}>{g}</option>)}
+                      <option value="">Choose genre...</option>{GENRES.map(g=><option key={g} value={g}>{g}</option>)}
                     </select></div>
                     <div style={{ background:"rgba(155,107,58,0.08)",border:"1px solid rgba(155,107,58,0.2)",borderRadius:9,padding:"10px 12px",fontSize:12,fontFamily:"sans-serif",color:"#9B6B3A" }}>
                       🎤 Confirm: this is independent / unsigned music — no major label releases
                     </div>
-                    <button onClick={()=>{if(!uploadData.title||!uploadData.artist||!uploadData.genre){setUploadError("Vul alle velden in.");return;}setUploadError("");setUploadStep(2);}} style={{ background:"#9B6B3A",border:"none",borderRadius:11,padding:"12px",color:"#fff",fontFamily:"sans-serif",fontSize:14,fontWeight:700,cursor:"pointer" }}>Volgende →</button>
+                    <button onClick={()=>{if(!uploadData.title||!uploadData.artist||!uploadData.genre){setUploadError("Please fill in all fields.");return;}setUploadError("");setUploadStep(2);}} style={{ background:"#9B6B3A",border:"none",borderRadius:11,padding:"12px",color:"#fff",fontFamily:"sans-serif",fontSize:14,fontWeight:700,cursor:"pointer" }}>Next →</button>
                   </div>
                 )}
 
                 {uploadStep===2&&(
                   <div style={{ display:"flex",flexDirection:"column",gap:11 }}>
-                    <div><div style={{ fontSize:11,color:"#777",fontFamily:"sans-serif",marginBottom:4 }}>Verhaal achter je track * <span style={{ color:"#444" }}>(min. 20 tekens)</span></div>
-                    <textarea value={uploadData.bio} onChange={e=>setUploadData(p=>({...p,bio:e.target.value}))} placeholder="Vertel het verhaal achter dit nummer..." rows={5} style={{ ...inp,resize:"vertical" }}/>
-                    <div style={{ fontSize:10,color:uploadData.bio.length<20?"#D85A30":"#1D9E75",fontFamily:"sans-serif",textAlign:"right",marginTop:3 }}>{uploadData.bio.length} tekens</div></div>
-                    <div><div style={{ fontSize:11,color:"#777",fontFamily:"sans-serif",marginBottom:7 }}>Kleur voor je kaart</div>
+                    <div><div style={{ fontSize:11,color:"#777",fontFamily:"sans-serif",marginBottom:4 }}>Story behind your track * <span style={{ color:"#444" }}>(min. 20 characters)</span></div>
+                    <textarea value={uploadData.bio} onChange={e=>setUploadData(p=>({...p,bio:e.target.value}))} placeholder="Tell the story behind this track..." rows={5} style={{ ...inp,resize:"vertical" }}/>
+                    <div style={{ fontSize:10,color:uploadData.bio.length<20?"#D85A30":"#1D9E75",fontFamily:"sans-serif",textAlign:"right",marginTop:3 }}>{uploadData.bio.length} characters</div></div>
+                    <div><div style={{ fontSize:11,color:"#777",fontFamily:"sans-serif",marginBottom:7 }}>Color for your card</div>
                     <div style={{ display:"flex",gap:9,flexWrap:"wrap" }}>{COLORS.map(col=><button key={col} onClick={()=>setUploadData(p=>({...p,color:col}))} style={{ width:32,height:32,borderRadius:"50%",background:COLOR_MAP[col].accent,border:uploadData.color===col?"3px solid #fff":"3px solid transparent",cursor:"pointer",outline:"none" }}/>)}</div></div>
                     <div style={{ display:"flex",gap:7 }}>
-                      <button onClick={()=>setUploadStep(1)} style={{ flex:1,background:"rgba(255,255,255,0.05)",border:"none",borderRadius:11,padding:"12px",color:"#666",fontFamily:"sans-serif",fontSize:14,cursor:"pointer" }}>← Terug</button>
-                      <button onClick={()=>{if(uploadData.bio.length<20){setUploadError("Bio te kort.");return;}setUploadError("");setUploadStep(3);}} style={{ flex:2,background:"#9B6B3A",border:"none",borderRadius:11,padding:"12px",color:"#fff",fontFamily:"sans-serif",fontSize:14,fontWeight:700,cursor:"pointer" }}>Volgende →</button>
+                      <button onClick={()=>setUploadStep(1)} style={{ flex:1,background:"rgba(255,255,255,0.05)",border:"none",borderRadius:11,padding:"12px",color:"#666",fontFamily:"sans-serif",fontSize:14,cursor:"pointer" }}>← Back</button>
+                      <button onClick={()=>{if(uploadData.bio.length<20){setUploadError("Bio too short.");return;}setUploadError("");setUploadStep(3);}} style={{ flex:2,background:"#9B6B3A",border:"none",borderRadius:11,padding:"12px",color:"#fff",fontFamily:"sans-serif",fontSize:14,fontWeight:700,cursor:"pointer" }}>Next →</button>
                     </div>
                   </div>
                 )}
@@ -928,22 +928,22 @@ export default function App() {
                   <div style={{ display:"flex",flexDirection:"column",gap:11 }}>
                     <div onClick={()=>fileRef.current?.click()} style={{ border:`2px dashed ${uploadFile?"#1D9E75":"rgba(255,255,255,0.1)"}`,borderRadius:13,padding:"28px 18px",textAlign:"center",cursor:"pointer",background:uploadFile?"rgba(29,158,117,0.05)":"transparent" }}>
                       <div style={{ fontSize:30,marginBottom:7 }}>{uploadFile?"✅":"🎵"}</div>
-                      <div style={{ fontSize:13,color:uploadFile?"#1D9E75":"#666",fontFamily:"sans-serif",fontWeight:600 }}>{uploadFile?uploadFile.name:"Tik om MP3 te kiezen"}</div>
+                      <div style={{ fontSize:13,color:uploadFile?"#1D9E75":"#666",fontFamily:"sans-serif",fontWeight:600 }}>{uploadFile?uploadFile.name:"Tap to choose MP3"}</div>
                       {uploadFile&&<div style={{ fontSize:11,color:"#555",fontFamily:"sans-serif",marginTop:3 }}>{(uploadFile.size/1024/1024).toFixed(2)} MB</div>}
-                      <div style={{ fontSize:10,color:"#444",fontFamily:"sans-serif",marginTop:5 }}>Alleen MP3 · Max. 3 MB</div>
+                      <div style={{ fontSize:10,color:"#444",fontFamily:"sans-serif",marginTop:5 }}>Allen MP3 · Max. 3 MB</div>
                       <input ref={fileRef} type="file" accept=".mp3,audio/mpeg" onChange={handleFileSelect} style={{ display:"none" }}/>
                     </div>
 
                     {!isAdmin&&uploadCount>=FREE_TRACKS&&(
                       <div style={{ background:"rgba(155,107,58,0.1)",border:"1px solid rgba(155,107,58,0.3)",borderRadius:10,padding:"10px 12px",fontSize:12,fontFamily:"sans-serif",color:"#9B6B3A" }}>
-                        💳 Dit is je {uploadCount+1}e nummer — na bevestiging betaal je €2,50 via iDEAL
+                        💳 This is your {uploadCount+1}st track — after confirmation you pay €2.50 via iDEAL
                       </div>
                     )}
 
                     <div style={{ display:"flex",gap:7 }}>
-                      <button onClick={()=>setUploadStep(2)} style={{ flex:1,background:"rgba(255,255,255,0.05)",border:"none",borderRadius:11,padding:"12px",color:"#666",fontFamily:"sans-serif",fontSize:14,cursor:"pointer" }}>← Terug</button>
+                      <button onClick={()=>setUploadStep(2)} style={{ flex:1,background:"rgba(255,255,255,0.05)",border:"none",borderRadius:11,padding:"12px",color:"#666",fontFamily:"sans-serif",fontSize:14,cursor:"pointer" }}>← Back</button>
                       <button onClick={checkAndUpload} disabled={!uploadFile||uploading} style={{ flex:2,background:uploadFile&&!uploading?"#9B6B3A":"#1a1a1a",border:"none",borderRadius:11,padding:"12px",color:uploadFile&&!uploading?"#fff":"#444",fontFamily:"sans-serif",fontSize:14,fontWeight:700,cursor:uploadFile&&!uploading?"pointer":"default" }}>
-                        {uploading?"Uploaden...":!isAdmin&&uploadCount>=FREE_TRACKS?"💳 Uploaden (€2,50)":"📡 Zet op BIGTUNES"}
+                        {uploading?"Uploading...":!isAdmin&&uploadCount>=FREE_TRACKS?"💳 Upload (€2.50)":"📡 Put on BIGTUNES"}
                       </button>
                     </div>
                   </div>
@@ -959,34 +959,34 @@ export default function App() {
           <div>
             <div style={{ marginBottom:24 }}>
               <div style={{ fontSize:10,letterSpacing:3,color:"#9B6B3A",fontFamily:"sans-serif",fontWeight:700,textTransform:"uppercase",marginBottom:8 }}>
-                ● Stompin Entertainment presenteert
+                ● Stompin Entertainment presents
               </div>
               <div style={{ fontSize:26,fontWeight:700,color:"#f0ede8",lineHeight:1.2,marginBottom:12 }}>
                 BIG<span style={{ color:"#9B6B3A" }}>TUNES</span> RADIO
               </div>
               <div style={{ fontSize:15,color:"#ccc",lineHeight:1.8,fontStyle:"italic",borderLeft:"3px solid #9B6B3A",paddingLeft:14,marginBottom:20 }}>
-                "Voor de stemmen die niemand hoort — de artiesten die te rauw, te echt en te vrij zijn voor de grote commerciële stations."
+                "For the voices nobody hears — artists too raw, too real, and too free for mainstream radio."
               </div>
             </div>
 
             <div style={{ background:"rgba(12,5,2,0.75)",border:"1px solid rgba(155,107,58,0.2)",borderRadius:16,padding:"20px",marginBottom:14,backdropFilter:"blur(8px)" }}>
-              <div style={{ fontSize:10,letterSpacing:2,color:"#9B6B3A",fontFamily:"sans-serif",fontWeight:700,textTransform:"uppercase",marginBottom:10 }}>🎯 Onze Missie</div>
+              <div style={{ fontSize:10,letterSpacing:2,color:"#9B6B3A",fontFamily:"sans-serif",fontWeight:700,textTransform:"uppercase",marginBottom:10 }}>🎯 Our Mission</div>
               <div style={{ fontSize:14,color:"#ccc",lineHeight:1.8 }}>
-                BIGTUNES RADIO is opgericht voor artiesten die geen airplay krijgen op de grote commerciële radiostations. Hier vind je geen opgelegde hitlijsten of label-gedreven muziek — alleen puur, ongepolijst talent.
+                BIGTUNES RADIO was founded for artists who get no airplay on mainstream radio. No forced charts, no label-driven music — just pure, unpolished talent.
               </div>
               <div style={{ fontSize:14,color:"#ccc",lineHeight:1.8,marginTop:12 }}>
-                Of je nu underground hip-hop maakt, harde electronic, ruwe R&B of experimentele dancehall — bij BIGTUNES krijg jij de spotlight die je verdient.
+                Whether you make underground hip-hop, hard electronic, raw R&B or experimental dancehall — at BIGTUNES you get the spotlight you deserve.
               </div>
             </div>
 
             <div style={{ background:"rgba(12,5,2,0.75)",border:"1px solid rgba(155,107,58,0.2)",borderRadius:16,padding:"20px",marginBottom:14,backdropFilter:"blur(8px)" }}>
-              <div style={{ fontSize:10,letterSpacing:2,color:"#9B6B3A",fontFamily:"sans-serif",fontWeight:700,textTransform:"uppercase",marginBottom:14 }}>🎵 Wat je hier vindt</div>
+              <div style={{ fontSize:10,letterSpacing:2,color:"#9B6B3A",fontFamily:"sans-serif",fontWeight:700,textTransform:"uppercase",marginBottom:14 }}>🎵 What you find here</div>
               <div style={{ display:"flex",flexDirection:"column",gap:12 }}>
                 {[
-                  ["🔥","Underground & Ongesigned","Puur artistieke tracks — geen labels, geen filters, geen compromissen"],
-                  ["🎤","Echte Artiesten","Independent musicians die hun hart in hun muziek stoppen"],
-                  ["🏆","Community Stemmen","Jij bepaalt wie bovenaan staat — niet een algoritme of een label"],
-                  ["📡","On-Demand Radio","Luister wanneer je wil, stem op wat je raakt, deel wat je beweegt"],
+                  ["🔥","Underground & Unsigned","Pure artistic tracks — no labels, no filters, no compromises"],
+                  ["🎤","Echte Artists","Independent musicians who pour their heart into their music"],
+                  ["🏆","Community Votes","You decide who ranks highest — not an algorithm or a label"],
+                  ["📡","On-Demand Radio","Listen when you want, vote for what moves you, share what you love"],
                 ].map(([icon,title,desc])=>(
                   <div key={title} style={{ display:"flex",gap:12,alignItems:"flex-start" }}>
                     <div style={{ fontSize:22,flexShrink:0,marginTop:2 }}>{icon}</div>
@@ -1000,16 +1000,16 @@ export default function App() {
             </div>
 
             <div style={{ background:"rgba(155,107,58,0.08)",border:"1px solid rgba(155,107,58,0.3)",borderRadius:16,padding:"20px",marginBottom:14,backdropFilter:"blur(8px)" }}>
-              <div style={{ fontSize:10,letterSpacing:2,color:"#9B6B3A",fontFamily:"sans-serif",fontWeight:700,textTransform:"uppercase",marginBottom:10 }}>🎸 Voor Artiesten</div>
+              <div style={{ fontSize:10,letterSpacing:2,color:"#9B6B3A",fontFamily:"sans-serif",fontWeight:700,textTransform:"uppercase",marginBottom:10 }}>🎸 Voor Artists</div>
               <div style={{ fontSize:14,color:"#ccc",lineHeight:1.8,marginBottom:14 }}>
-                Ben jij een ongesigned artiest die zijn muziek wil delen met de wereld? Upload je track en laat de community beslissen. Upload je eerste nummer <strong style={{ color:"#1D9E75" }}>gratis</strong> en laat de wereld jouw muziek horen.
+                Are you an unsigned artist who wants to share music with the world? Upload your track and let the community decide. Upload your first track <strong style={{ color:"#1D9E75" }}>for free</strong> and let the world hear your music.
               </div>
               <div style={{ display:"flex",flexDirection:"column",gap:8,marginBottom:16 }}>
                 {[
-                  ["✅","Uploaden — Gratis"],
-                  ["🎵","Maximaal 3 nummers per artiest"],
-                  ["🎤","Alleen independent & unsigned artiesten"],
-                  ["📱","MP3 formaat · Max. 3 MB"],
+                  ["✅","Uploaden — Free"],
+                  ["🎵","Maximum 3 tracks per artist"],
+                  ["🎤","Allen independent & unsigned artiesten"],
+                  ["📱","MP3 format · Max. 3 MB"],
                 ].map(([icon,text])=>(
                   <div key={text} style={{ display:"flex",gap:8,alignItems:"center",fontSize:13,fontFamily:"sans-serif",color:"#aaa" }}>
                     <span>{icon}</span><span>{text}</span>
@@ -1017,14 +1017,14 @@ export default function App() {
                 ))}
               </div>
               <button onClick={()=>setView("upload")} style={{ width:"100%",background:"#9B6B3A",border:"none",borderRadius:11,padding:"13px",color:"#fff",fontFamily:"sans-serif",fontSize:14,fontWeight:700,cursor:"pointer" }}>
-                🎵 Upload je nummer nu
+                🎵 Upload your track nu
               </button>
             </div>
 
             <div style={{ background:"rgba(12,5,2,0.75)",border:"1px solid rgba(155,107,58,0.2)",borderRadius:16,padding:"20px",marginBottom:14,backdropFilter:"blur(8px)" }}>
               <div style={{ fontSize:10,letterSpacing:2,color:"#9B6B3A",fontFamily:"sans-serif",fontWeight:700,textTransform:"uppercase",marginBottom:10 }}>🏢 Stompin Entertainment</div>
               <div style={{ fontSize:14,color:"#ccc",lineHeight:1.8 }}>
-                BIGTUNES RADIO is een initiatief van <strong style={{ color:"#f0ede8" }}>Stompin Entertainment</strong> — dedicated to giving independent artists the platform they deserve.
+                BIGTUNES RADIO is een initiatief of <strong style={{ color:"#f0ede8" }}>Stompin Entertainment</strong> — dedicated to giving independent artists the platform they deserve.
               </div>
               <div style={{ marginTop:14,paddingTop:14,borderTop:"1px solid rgba(255,255,255,0.05)" }}>
                 <div style={{ fontSize:11,color:"#555",fontFamily:"sans-serif",marginBottom:8 }}>CONTACT</div>
@@ -1035,13 +1035,13 @@ export default function App() {
             </div>
 
             <div style={{ background:"rgba(12,5,2,0.75)",border:"1px solid rgba(155,107,58,0.2)",borderRadius:16,padding:"20px",backdropFilter:"blur(8px)" }}>
-              <div style={{ fontSize:10,letterSpacing:2,color:"#9B6B3A",fontFamily:"sans-serif",fontWeight:700,textTransform:"uppercase",marginBottom:14 }}>📊 Hoe werkt de ranglijst?</div>
+              <div style={{ fontSize:10,letterSpacing:2,color:"#9B6B3A",fontFamily:"sans-serif",fontWeight:700,textTransform:"uppercase",marginBottom:14 }}>📊 How does the ranking work?</div>
               <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
                 {[
-                  ["🔥","Geef een vlam","Vlammen tellen zwaarder mee in de ranglijst — dit is jouw krachtigste stem"],
-                  ["❤️","Geef een like","Likes tellen ook mee — samen bepalen ze wie bovenaan staat"],
-                  ["🏆","Nummer van de maand","Het nummer met de meeste stemmen wint de maandtitel"],
-                  ["📅","Wekelijkse chart","Elke week een verse top 10 — jouw stem telt direct mee"],
+                  ["🔥","Give a flame","Flames tellen zwaarder mee in de ranglijst — dit is jouw krachtigste stem"],
+                  ["❤️","Give a like","Likes also count — together they determine who ranks highest"],
+                  ["🏆","Nummer of de maand","The track with the most votes wins the monthly title"],
+                  ["📅","Weekly chart","Every week a fresh top 10 — your vote counts immediately"],
                 ].map(([icon,title,desc])=>(
                   <div key={title} style={{ display:"flex",gap:12,alignItems:"flex-start" }}>
                     <div style={{ fontSize:20,flexShrink:0 }}>{icon}</div>
@@ -1067,8 +1067,8 @@ export default function App() {
           return (
             <div>
               <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14 }}>
-                <button onClick={()=>setView("radio")} style={{ background:"rgba(255,255,255,0.05)",border:"none",borderRadius:9,padding:"6px 13px",color:"#666",fontFamily:"sans-serif",fontSize:12,cursor:"pointer" }}>← Terug</button>
-                {isAdmin&&<button onClick={()=>{if(window.confirm(`"${track.title}" verwijderen?`))adminDeleteTrack(track).then(()=>setView("radio"));}} style={{ background:"rgba(216,90,48,0.1)",border:"1px solid rgba(216,90,48,0.3)",borderRadius:9,padding:"6px 13px",color:"#D85A30",fontFamily:"sans-serif",fontSize:12,fontWeight:600,cursor:"pointer" }}>🗑 Verwijderen</button>}
+                <button onClick={()=>setView("radio")} style={{ background:"rgba(255,255,255,0.05)",border:"none",borderRadius:9,padding:"6px 13px",color:"#666",fontFamily:"sans-serif",fontSize:12,cursor:"pointer" }}>← Back</button>
+                {isAdmin&&<button onClick={()=>{if(window.confirm(`"${track.title}" verwijderen?`))adminDeleteTrack(track).then(()=>setView("radio"));}} style={{ background:"rgba(216,90,48,0.1)",border:"1px solid rgba(216,90,48,0.3)",borderRadius:9,padding:"6px 13px",color:"#D85A30",fontFamily:"sans-serif",fontSize:12,fontWeight:600,cursor:"pointer" }}>🗑 Delete</button>}
               </div>
 
               <div style={{ background:`${tc.bg}10`,border:`1px solid ${tc.accent}30`,borderRadius:15,padding:"16px",marginBottom:12,backdropFilter:"blur(8px)" }}>
@@ -1083,30 +1083,30 @@ export default function App() {
                   <span style={{ background:`${tc.badge}45`,color:tc.text,padding:"2px 8px",borderRadius:9,fontSize:11,fontFamily:"sans-serif" }}>{track.genre}</span>
                   <span style={{ background:"rgba(255,255,255,0.04)",color:"#555",padding:"2px 8px",borderRadius:9,fontSize:11,fontFamily:"sans-serif" }}>{track.month}</span>
                   <span style={{ background:"rgba(155,107,58,0.12)",color:"#9B6B3A",padding:"2px 8px",borderRadius:9,fontSize:11,fontFamily:"sans-serif" }}>🎤 Independent</span>
-                  {nowPlaying&&<span style={{ background:`${tc.accent}20`,color:tc.accent,padding:"2px 8px",borderRadius:9,fontSize:11,fontFamily:"sans-serif" }}>▶ Speelt nu</span>}
-                  {user&&track.user_id===user.id&&<span style={{ background:"rgba(29,158,117,0.12)",color:"#1D9E75",padding:"2px 8px",borderRadius:9,fontSize:11,fontFamily:"sans-serif" }}>Jouw nummer</span>}
+                  {nowPlaying&&<span style={{ background:`${tc.accent}20`,color:tc.accent,padding:"2px 8px",borderRadius:9,fontSize:11,fontFamily:"sans-serif" }}>▶ Now playing</span>}
+                  {user&&track.user_id===user.id&&<span style={{ background:"rgba(29,158,117,0.12)",color:"#1D9E75",padding:"2px 8px",borderRadius:9,fontSize:11,fontFamily:"sans-serif" }}>Your track</span>}
                 </div>
               </div>
 
               <div style={{ background:"rgba(12,5,2,0.65)",border:"1px solid rgba(155,107,58,0.08)",borderRadius:13,padding:"13px",marginBottom:11,backdropFilter:"blur(8px)" }}>
                 <button onClick={()=>jumpToTrack(track)} style={{ width:"100%",background:nowPlaying&&isPlaying?`${tc.accent}18`:tc.accent,border:nowPlaying&&isPlaying?`1px solid ${tc.accent}`:"none",borderRadius:11,padding:"12px",color:"#fff",fontFamily:"sans-serif",fontSize:14,fontWeight:700,cursor:"pointer" }}>
-                  {nowPlaying&&isPlaying?"⏸ Pauze":"▶ Afspelen via BIGTUNES playlist"}
+                  {nowPlaying&&isPlaying?"⏸ Pause":"▶ Play via BIGTUNES playlist"}
                 </button>
               </div>
 
               <div style={{ background:"rgba(12,5,2,0.65)",border:"1px solid rgba(155,107,58,0.08)",borderRadius:13,padding:"13px",marginBottom:11,backdropFilter:"blur(8px)" }}>
-                <div style={{ fontSize:9,color:"#555",fontFamily:"sans-serif",marginBottom:7,letterSpacing:1,textTransform:"uppercase" }}>Over dit nummer</div>
+                <div style={{ fontSize:9,color:"#555",fontFamily:"sans-serif",marginBottom:7,letterSpacing:1,textTransform:"uppercase" }}>About dit nummer</div>
                 <div style={{ fontSize:14,color:"#ccc",lineHeight:1.75 }}>{track.bio}</div>
               </div>
 
               <div style={{ background:"rgba(12,5,2,0.65)",border:"1px solid rgba(155,107,58,0.08)",borderRadius:13,padding:"13px",marginBottom:11,backdropFilter:"blur(8px)" }}>
-                <div style={{ fontSize:9,color:"#555",fontFamily:"sans-serif",marginBottom:11,letterSpacing:1,textTransform:"uppercase" }}>Stem — onbeperkt, elke 5 seconden</div>
-                {!user&&<div style={{ textAlign:"center",marginBottom:10 }}><button onClick={()=>setShowAuth(true)} style={{ color:"#9B6B3A",background:"transparent",border:"none",cursor:"pointer",fontFamily:"sans-serif",fontSize:12 }}>Log in om te stemmen →</button></div>}
+                <div style={{ fontSize:9,color:"#555",fontFamily:"sans-serif",marginBottom:11,letterSpacing:1,textTransform:"uppercase" }}>Vote — unlimited, every 1 second</div>
+                {!user&&<div style={{ textAlign:"center",marginBottom:10 }}><button onClick={()=>setShowAuth(true)} style={{ color:"#9B6B3A",background:"transparent",border:"none",cursor:"pointer",fontFamily:"sans-serif",fontSize:12 }}>Login to vote →</button></div>}
                 <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:9 }}>
                   <button onClick={()=>vote(track.id,"flame")} style={{ padding:"13px",background:hasFlame?"rgba(216,90,48,0.13)":"rgba(255,255,255,0.02)",border:`2px solid ${hasFlame?"#D85A30":"rgba(255,255,255,0.06)"}`,borderRadius:11,cursor:"pointer" }}>
                     <div style={{ fontSize:24 }}>🔥</div>
                     <div style={{ fontSize:19,fontWeight:700,color:"#D85A30",fontFamily:"sans-serif" }}>{track.flames}</div>
-                    <div style={{ fontSize:11,color:"#555",fontFamily:"sans-serif" }}>Vlammen</div>
+                    <div style={{ fontSize:11,color:"#555",fontFamily:"sans-serif" }}>Flames</div>
                   </button>
                   <button onClick={()=>vote(track.id,"like")} style={{ padding:"13px",background:hasLike?"rgba(127,119,221,0.13)":"rgba(255,255,255,0.02)",border:`2px solid ${hasLike?"#7F77DD":"rgba(255,255,255,0.06)"}`,borderRadius:11,cursor:"pointer" }}>
                     <div style={{ fontSize:24 }}>❤️</div>
@@ -1114,11 +1114,11 @@ export default function App() {
                     <div style={{ fontSize:11,color:"#555",fontFamily:"sans-serif" }}>Likes</div>
                   </button>
                 </div>
-                <div style={{ marginTop:9,fontSize:10,color:"#444",fontFamily:"sans-serif",textAlign:"center" }}>Hoe meer stemmen, hoe hoger in de charts!</div>
+                <div style={{ marginTop:9,fontSize:10,color:"#444",fontFamily:"sans-serif",textAlign:"center" }}>More votes means higher in the charts!</div>
               </div>
 
               <div style={{ background:"rgba(12,5,2,0.65)",border:"1px solid rgba(155,107,58,0.08)",borderRadius:13,padding:"13px",marginBottom:11,backdropFilter:"blur(8px)" }}>
-                <div style={{ fontSize:9,color:"#555",fontFamily:"sans-serif",marginBottom:11,letterSpacing:1,textTransform:"uppercase" }}>Deel dit nummer</div>
+                <div style={{ fontSize:9,color:"#555",fontFamily:"sans-serif",marginBottom:11,letterSpacing:1,textTransform:"uppercase" }}>Share this track</div>
                 <ShareButtons track={track}/>
               </div>
 
