@@ -9,7 +9,7 @@ const FREE_TRACKS = 1;
 const PRICE_PER_TRACK = 2.50;
 const ADMIN_EMAILS = ["stompinent@gmail.com", "wilbertmarman@gmail.com"];
 const VOTE_COOLDOWN_MS = 1000; // 1 seconde tussen stemmen
-const BG_IMAGE = "https://i.ibb.co/zTjbKgPg/IMG-0355.png";
+const BG_IMAGE = "https://cpltcslwtyjrnfkqmwph.supabase.co/storage/v1/object/public/BIGTUNESFOTO/Ontwerp%20zonder%20titel-2.jpeg";
 const TRACKS_PER_PAGE = 10; // ← hoeveel tracks per keer laden
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -611,7 +611,7 @@ export default function App() {
       {/* Achtergrond */}
       <div style={{ position:"fixed", top:0, left:0, width:"100%", height:"100vh", zIndex:0, pointerEvents:"none", overflow:"hidden" }}>
         <div style={{ position:"absolute", inset:0, backgroundImage:`url('${BG_IMAGE}')`, backgroundSize:"cover", backgroundPosition:"center top" }}/>
-        <div style={{ position:"absolute", inset:0, background:"linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.1) 25%, rgba(0,0,0,0.7) 65%, rgba(0,0,0,0.98) 100%)" }}/>
+        <div style={{ position:"absolute", inset:0, background:"linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.05) 25%, rgba(0,0,0,0.6) 65%, rgba(0,0,0,0.97) 100%)" }}/>
       </div>
 
       {/* Modals */}
