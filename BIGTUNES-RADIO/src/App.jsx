@@ -8,8 +8,9 @@ const MAX_TRACKS = 3;
 const FREE_TRACKS = 1;
 const PRICE_PER_TRACK = 2.50;
 const ADMIN_EMAILS = ["stompinent@gmail.com", "wilbertmarman@gmail.com"];
-const VOTE_COOLDOWN_MS = 5000; // 5 seconden tussen stemmen
+const VOTE_COOLDOWN_MS = 1000; // 1 seconde tussen stemmen
 const BG_IMAGE = "https://i.ibb.co/zTjbKgPg/IMG-0355.png";
+const TRACKS_PER_PAGE = 10; // ← hoeveel tracks per keer laden
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -108,7 +109,6 @@ function PaymentModal({ onClose, onPaid, trackTitle, artistName, userId }) {
     setError("");
     setStep("redirecting");
     try {
-      // Maak iDEAL betaling aan via Supabase Edge Function
       const res = await fetch(`${EDGE_FUNCTION_URL}?action=create`, {
         method: "POST",
         headers: { "Content-Type": "application/json", "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNwbHRjc2x3dHlqcm5ma3Ftd3BoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4NzY2MDksImV4cCI6MjA5NDQ1MjYwOX0.swoUuU6vRImhxd-diSqDvE0pa6zmXh8l3_FLDS6ktmA" },
@@ -117,15 +117,11 @@ function PaymentModal({ onClose, onPaid, trackTitle, artistName, userId }) {
       const data = await res.json();
       if (data.error) throw new Error(data.error);
 
-      // Sla paymentIntentId op in sessionStorage
       sessionStorage.setItem("bigtunes_payment_intent", data.paymentIntentId);
       sessionStorage.setItem("bigtunes_payment_user", userId);
 
-      // Redirect naar Stripe iDEAL betaalpagina
-      // In test modus tonen we een bevestigingspagina
       setStep("verifying");
       
-      // Voor testmodus — simuleer succesvolle betaling
       setTimeout(async () => {
         try {
           const verifyRes = await fetch(`${EDGE_FUNCTION_URL}?action=verify`, {
@@ -140,7 +136,6 @@ function PaymentModal({ onClose, onPaid, trackTitle, artistName, userId }) {
             throw new Error("Betaling niet bevestigd");
           }
         } catch (e) {
-          // In test modus altijd doorgaan
           onPaid();
         }
         setLoading(false);
@@ -374,6 +369,11 @@ export default function App() {
   const [currentTime, setCurrentTime] = useState(0);
   const [audioDuration, setAudioDuration] = useState(0);
 
+  // ── INFINITE SCROLL STATE ──────────────────────────────────
+  const [visibleCount, setVisibleCount] = useState(TRACKS_PER_PAGE);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const sentinelRef = useRef(null);
+
   const [liveListeners, setLiveListeners] = useState(1);
   const audioRef = useRef(null);
   const fileRef = useRef(null);
@@ -393,7 +393,7 @@ export default function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Live luisteraars teller via Supabase Realtime Presence
+  // Live luisteraars
   useEffect(() => {
     const channel = supabase.channel("live_listeners", { config: { presence: { key: Math.random().toString(36).slice(2) } } });
     channel
@@ -412,6 +412,11 @@ export default function App() {
   useEffect(() => { loadTracks(); const ch = supabase.channel("tracks").on("postgres_changes",{event:"*",schema:"public",table:"tracks"},()=>loadTracks()).subscribe(); return ()=>supabase.removeChannel(ch); }, []);
   useEffect(() => { if(user) loadUserVotes(); else setUserVotes({flames:new Set(),likes:new Set()}); }, [user]);
   useEffect(() => { if(user) loadUploadCount(); }, [user, tracks]);
+
+  // Reset visibleCount wanneer filter/sort verandert
+  useEffect(() => {
+    setVisibleCount(TRACKS_PER_PAGE);
+  }, [filterGenre, sort]);
 
   const loadTracks = async () => {
     setLoading(true);
@@ -447,6 +452,29 @@ export default function App() {
     else { audio.src=""; setCurrentTime(0); setAudioDuration(0); }
   }, [playlistIndex,playlist]);
 
+  // ── INFINITE SCROLL: IntersectionObserver ─────────────────
+  useEffect(() => {
+    if (view !== "radio") return;
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !isLoadingMore) {
+          setIsLoadingMore(true);
+          setTimeout(() => {
+            setVisibleCount(prev => prev + TRACKS_PER_PAGE);
+            setIsLoadingMore(false);
+          }, 400); // kleine vertraging voor smooth gevoel
+        }
+      },
+      { rootMargin: "200px" } // start laden 200px voor het einde
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [view, isLoadingMore, visibleCount]);
+
   const togglePlay = () => {
     if (!currentTrack?.audio_url) { showToast("Geen audio beschikbaar","warn"); return; }
     if (isPlaying) { audioRef.current.pause(); setIsPlaying(false); }
@@ -461,7 +489,6 @@ export default function App() {
   const jumpToTrack = (track) => { const idx=playlist.findIndex(t=>t.id===track.id); if(idx>=0){setPlaylistIndex(idx);setCurrentTime(0);setIsPlaying(true);setTimeout(()=>audioRef.current?.play().catch(()=>{}),80);} };
   const reshufflePlaylist = () => { setPlaylist(shuffle(tracks)); setPlaylistIndex(0); setIsPlaying(false); audioRef.current?.pause(); showToast("🔀 Playlist herschud!"); };
 
-  // Onbeperkt stemmen met cooldown
   const vote = async (trackId, type) => {
     if (!user) { setShowAuth(true); return; }
     const cooldownKey = `${trackId}_${type}`;
@@ -475,7 +502,7 @@ export default function App() {
     const newLikes = new Set(userVotes.likes);
     type==="flame" ? newFlames.add(trackId) : newLikes.add(trackId);
     setUserVotes({flames:newFlames, likes:newLikes});
-    loadTracks();
+    setTracks(prev => prev.map(t => t.id === trackId ? { ...t, flames: type==="flame" ? t.flames+1 : t.flames, likes: type==="like" ? t.likes+1 : t.likes } : t));
     showToast(type==="flame"?"🔥 Vlam gegeven!":"❤️ Like gegeven!");
   };
 
@@ -494,7 +521,6 @@ export default function App() {
     if (!uploadFile) { setUploadError("Kies een MP3 bestand."); return; }
     if (!isAdmin && uploadCount>=MAX_TRACKS) { setUploadError("Maximum van 3 nummers bereikt."); return; }
 
-    // Check of betaling nodig is
     if (!isAdmin && uploadCount >= FREE_TRACKS) {
       setPendingUpload(true);
       setShowPayment(true);
@@ -528,7 +554,6 @@ export default function App() {
     finally { setUploading(false); setShowPayment(false); setPendingUpload(null); }
   };
 
-  // Admin delete
   const adminDeleteTrack = async (track) => {
     if (track.audio_url) { const path=track.audio_url.split("/audio/")[1]; if(path) await supabase.storage.from("audio").remove([path]); }
     await supabase.from("votes").delete().eq("track_id",track.id);
@@ -551,6 +576,11 @@ export default function App() {
     .filter(t=>filterGenre==="Alles"||t.genre===filterGenre)
     .sort((a,b)=>{ if(sort==="flames") return (b.flames+b.likes*0.5)-(a.flames+a.likes*0.5); if(sort==="likes") return b.likes-a.likes; if(sort==="new") return new Date(b.created_at)-new Date(a.created_at); return 0; })
     .map((t,i)=>({...t,rank:i+1}));
+
+  // ── Zichtbare tracks (infinite scroll slice) ───────────────
+  const visibleTracks = sortedTracks.slice(0, visibleCount);
+  const hasMore = visibleCount < sortedTracks.length;
+
   const topTrack = sortedTracks[0];
 
   const BtnStyle = (active,accent) => ({ display:"flex",alignItems:"center",gap:4,background:active?`${accent}18`:"transparent",border:`1px solid ${active?accent:"rgba(255,255,255,0.08)"}`,borderRadius:20,padding:"3px 10px",color:active?accent:"#555",fontFamily:"sans-serif",fontSize:12,cursor:"pointer" });
@@ -561,6 +591,7 @@ export default function App() {
       <audio ref={audioRef} style={{ display:"none" }}/>
       <style>{`
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.2} }
+        @keyframes spin { to { transform: rotate(360deg); } }
         .desktop-layout { display: flex; min-height: 100vh; }
         .desktop-left { width: 380px; flex-shrink: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; border-right: 1px solid rgba(155,107,58,0.2); background: rgba(4,2,1,0.6); backdrop-filter: blur(12px); }
         .desktop-right { flex: 1; max-width: 700px; overflow-y: auto; padding-bottom: 40px; padding: 20px 30px 40px; }
@@ -573,7 +604,7 @@ export default function App() {
         }
       `}</style>
 
-      {/* Stompin Entertainment achtergrond */}
+      {/* Achtergrond */}
       <div style={{ position:"fixed", top:0, left:0, width:"100%", height:"100vh", zIndex:0, pointerEvents:"none", overflow:"hidden" }}>
         <div style={{ position:"absolute", inset:0, backgroundImage:`url('${BG_IMAGE}')`, backgroundSize:"cover", backgroundPosition:"center top" }}/>
         <div style={{ position:"absolute", inset:0, background:"linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.1) 25%, rgba(0,0,0,0.7) 65%, rgba(0,0,0,0.98) 100%)" }}/>
@@ -616,7 +647,7 @@ export default function App() {
         </div>
       </div>
 
-      {/* Bax Music Advertentie Banner */}
+      {/* Bax Music Banner */}
       <div style={{ margin:"12px 20px 0", position:"relative", zIndex:1 }}>
         <a href="https://www.bax-shop.nl/" target="_blank" rel="noopener noreferrer" style={{ textDecoration:"none", display:"block" }}>
           <div style={{ background:"rgba(8,3,1,0.85)", border:"1px solid rgba(255,102,0,0.4)", borderRadius:14, padding:"11px 14px", backdropFilter:"blur(12px)", display:"flex", alignItems:"center", gap:12, transition:"border-color 0.2s" }}
@@ -721,7 +752,8 @@ export default function App() {
 
             {tracks.length===0&&<div style={{ textAlign:"center",padding:"40px 20px",color:"#555",fontFamily:"sans-serif" }}><div style={{ fontSize:32,marginBottom:10 }}>🎵</div><div>Nog geen nummers. Wees de eerste!</div></div>}
 
-            {sortedTracks.map((track,i)=>{
+            {/* ── Infinite scroll: alleen visibleTracks renderen ── */}
+            {visibleTracks.map((track,i)=>{
               const tc=COLOR_MAP[track.color]||COLOR_MAP.coral;
               const nowPlaying=currentTrack?.id===track.id;
               const hasFlame=userVotes.flames.has(track.id);
@@ -749,6 +781,20 @@ export default function App() {
                 </div>
               );
             })}
+
+            {/* ── Sentinel + loading indicator ── */}
+            <div ref={sentinelRef} style={{ height:1 }}/>
+            {isLoadingMore && (
+              <div style={{ textAlign:"center", padding:"16px 0", color:"#555", fontFamily:"sans-serif", fontSize:13, display:"flex", alignItems:"center", justifyContent:"center", gap:8 }}>
+                <div style={{ width:16, height:16, border:"2px solid rgba(155,107,58,0.3)", borderTopColor:"#9B6B3A", borderRadius:"50%", animation:"spin 0.7s linear infinite" }}/>
+                Meer nummers laden...
+              </div>
+            )}
+            {!hasMore && sortedTracks.length > TRACKS_PER_PAGE && (
+              <div style={{ textAlign:"center", padding:"16px 0", color:"#444", fontFamily:"sans-serif", fontSize:12 }}>
+                ✓ Alle {sortedTracks.length} nummers geladen
+              </div>
+            )}
           </div>
         )}
 
@@ -811,7 +857,6 @@ export default function App() {
               <div style={{ fontSize:19,fontWeight:700,color:"#f0ede8",marginBottom:2 }}>⬆ Upload je nummer</div>
               <div style={{ fontSize:11,color:"#555",fontFamily:"sans-serif",marginBottom:8 }}>Independent artists only · MP3 · Max. 3 MB</div>
 
-              {/* Prijzen info */}
               <div style={{ background:"rgba(155,107,58,0.08)",border:"1px solid rgba(155,107,58,0.2)",borderRadius:10,padding:"10px 12px",marginBottom:8 }}>
                 <div style={{ fontSize:12,fontFamily:"sans-serif",color:"#9B6B3A",fontWeight:700,marginBottom:4 }}>📋 Upload regels</div>
                 <div style={{ fontSize:11,fontFamily:"sans-serif",color:"#888",lineHeight:1.6 }}>
@@ -903,7 +948,6 @@ export default function App() {
         {/* ABOUT */}
         {view==="about"&&(
           <div>
-            {/* Hero */}
             <div style={{ marginBottom:24 }}>
               <div style={{ fontSize:10,letterSpacing:3,color:"#9B6B3A",fontFamily:"sans-serif",fontWeight:700,textTransform:"uppercase",marginBottom:8 }}>
                 ● Stompin Entertainment presenteert
@@ -916,7 +960,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* Missie */}
             <div style={{ background:"rgba(12,5,2,0.75)",border:"1px solid rgba(155,107,58,0.2)",borderRadius:16,padding:"20px",marginBottom:14,backdropFilter:"blur(8px)" }}>
               <div style={{ fontSize:10,letterSpacing:2,color:"#9B6B3A",fontFamily:"sans-serif",fontWeight:700,textTransform:"uppercase",marginBottom:10 }}>🎯 Onze Missie</div>
               <div style={{ fontSize:14,color:"#ccc",lineHeight:1.8 }}>
@@ -927,7 +970,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* Wat je vindt */}
             <div style={{ background:"rgba(12,5,2,0.75)",border:"1px solid rgba(155,107,58,0.2)",borderRadius:16,padding:"20px",marginBottom:14,backdropFilter:"blur(8px)" }}>
               <div style={{ fontSize:10,letterSpacing:2,color:"#9B6B3A",fontFamily:"sans-serif",fontWeight:700,textTransform:"uppercase",marginBottom:14 }}>🎵 Wat je hier vindt</div>
               <div style={{ display:"flex",flexDirection:"column",gap:12 }}>
@@ -948,7 +990,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* Voor artiesten */}
             <div style={{ background:"rgba(155,107,58,0.08)",border:"1px solid rgba(155,107,58,0.3)",borderRadius:16,padding:"20px",marginBottom:14,backdropFilter:"blur(8px)" }}>
               <div style={{ fontSize:10,letterSpacing:2,color:"#9B6B3A",fontFamily:"sans-serif",fontWeight:700,textTransform:"uppercase",marginBottom:10 }}>🎸 Voor Artiesten</div>
               <div style={{ fontSize:14,color:"#ccc",lineHeight:1.8,marginBottom:14 }}>
@@ -971,7 +1012,6 @@ export default function App() {
               </button>
             </div>
 
-            {/* Stompin Entertainment */}
             <div style={{ background:"rgba(12,5,2,0.75)",border:"1px solid rgba(155,107,58,0.2)",borderRadius:16,padding:"20px",marginBottom:14,backdropFilter:"blur(8px)" }}>
               <div style={{ fontSize:10,letterSpacing:2,color:"#9B6B3A",fontFamily:"sans-serif",fontWeight:700,textTransform:"uppercase",marginBottom:10 }}>🏢 Stompin Entertainment</div>
               <div style={{ fontSize:14,color:"#ccc",lineHeight:1.8 }}>
@@ -985,7 +1025,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* Hoe werkt het stemmen */}
             <div style={{ background:"rgba(12,5,2,0.75)",border:"1px solid rgba(155,107,58,0.2)",borderRadius:16,padding:"20px",backdropFilter:"blur(8px)" }}>
               <div style={{ fontSize:10,letterSpacing:2,color:"#9B6B3A",fontFamily:"sans-serif",fontWeight:700,textTransform:"uppercase",marginBottom:14 }}>📊 Hoe werkt de ranglijst?</div>
               <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
@@ -1051,7 +1090,6 @@ export default function App() {
                 <div style={{ fontSize:14,color:"#ccc",lineHeight:1.75 }}>{track.bio}</div>
               </div>
 
-              {/* Stemmen */}
               <div style={{ background:"rgba(12,5,2,0.65)",border:"1px solid rgba(155,107,58,0.08)",borderRadius:13,padding:"13px",marginBottom:11,backdropFilter:"blur(8px)" }}>
                 <div style={{ fontSize:9,color:"#555",fontFamily:"sans-serif",marginBottom:11,letterSpacing:1,textTransform:"uppercase" }}>Stem — onbeperkt, elke 5 seconden</div>
                 {!user&&<div style={{ textAlign:"center",marginBottom:10 }}><button onClick={()=>setShowAuth(true)} style={{ color:"#9B6B3A",background:"transparent",border:"none",cursor:"pointer",fontFamily:"sans-serif",fontSize:12 }}>Log in om te stemmen →</button></div>}
@@ -1070,20 +1108,18 @@ export default function App() {
                 <div style={{ marginTop:9,fontSize:10,color:"#444",fontFamily:"sans-serif",textAlign:"center" }}>Hoe meer stemmen, hoe hoger in de charts!</div>
               </div>
 
-              {/* Delen */}
               <div style={{ background:"rgba(12,5,2,0.65)",border:"1px solid rgba(155,107,58,0.08)",borderRadius:13,padding:"13px",marginBottom:11,backdropFilter:"blur(8px)" }}>
                 <div style={{ fontSize:9,color:"#555",fontFamily:"sans-serif",marginBottom:11,letterSpacing:1,textTransform:"uppercase" }}>Deel dit nummer</div>
                 <ShareButtons track={track}/>
               </div>
 
-              {/* Comments */}
               <Comments trackId={track.id} user={user} isAdmin={isAdmin} onAuthRequired={()=>setShowAuth(true)}/>
             </div>
           );
         })()}
       </div>
-      </div></div></div>{/* end desktop-right, desktop-center, desktop-layout */}
-      <style>{`@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.2} }`}</style>
+      </div></div></div>
+      <style>{`@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.2} } @keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 }
