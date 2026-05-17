@@ -633,7 +633,7 @@ export default function App() {
               On Air · Live &nbsp;·&nbsp; 👥 {liveListeners} live
             </div>
             <div style={{ fontSize:24,fontWeight:700,color:"#f0ede8",lineHeight:1,letterSpacing:-1 }}>BIG<span style={{ color:"#9B6B3A" }}>TUNES</span> RADIO</div>
-            <div style={{ fontSize:10,color:"rgba(255,255,255,0.3)",fontFamily:"sans-serif",marginTop:2 }}>Stompin Entertainment · Home for Independent Artists</div>
+            <div style={{ fontSize:10,color:"rgba(255,255,255,0.3)",fontFamily:"sans-serif",marginTop:2 }}>Jouw muziek. Jouw podium. Geen filters.</div>
           </div>
           <div style={{ textAlign:"right" }}>
             {user ? (
