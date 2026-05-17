@@ -5,11 +5,11 @@ const SUPABASE_URL = "https://cpltcslwtyjrnfkqmwph.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNwbHRjc2x3dHlqcm5ma3Ftd3BoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4NzY2MDksImV4cCI6MjA5NDQ1MjYwOX0.swoUuU6vRImhxd-diSqDvE0pa6zmXh8l3_FLDS6ktmA";
 const MAX_FILE_MB = 3;
 const MAX_TRACKS = 3;
-const FREE_TRACKS = 1;
+const FREE_TRACKS = 1;c
 const PRICE_PER_TRACK = 2.50;
 const ADMIN_EMAILS = ["stompinent@gmail.com", "wilbertmarman@gmail.com"];
 const VOTE_COOLDOWN_MS = 1000; // 1 seconde tussen stemmen
-const BG_IMAGE = "https://i.ibb.co/zTjbKgPg/IMG-0355.png";
+const BG_IMAGE = "https://cpltcslwtyjrnfkqmwph.supabase.co/storage/v1/object/public/BIGTUNESFOTO/Ontwerp%20zonder%20titel-2.jpeg";
 const TRACKS_PER_PAGE = 10; // ← hoeveel tracks per keer laden
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
