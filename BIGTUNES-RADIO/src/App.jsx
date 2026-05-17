@@ -9,7 +9,7 @@ const FREE_TRACKS = 1;
 const PRICE_PER_TRACK = 2.50;
 const ADMIN_EMAILS = ["stompinent@gmail.com", "wilbertmarman@gmail.com"];
 const VOTE_COOLDOWN_MS = 1000; // 1 seconde tussen stemmen
-const BG_IMAGE = "https://i.ibb.co/zTjbKgPg/IMG-0355.png";
+const BG_IMAGE = "https://cpltcslwtyjrnfkqmwph.supabase.co/storage/v1/object/public/BIGTUNESFOTO/AF552965-94A0-429F-A9E1-9F46C7F00BE9.png";
 const TRACKS_PER_PAGE = 10; // ← hoeveel tracks per keer laden
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -728,15 +728,20 @@ export default function App() {
         {!loading&&view==="radio"&&(
           <div>
             {topTrack&&(
-              <div onClick={()=>{setSelectedTrack(topTrack);setView("detail");}} style={{ background:"rgba(8,3,1,0.8)",border:"1px solid rgba(155,107,58,0.4)",borderRadius:16,padding:"14px",marginBottom:14,cursor:"pointer",position:"relative",overflow:"hidden",backdropFilter:"blur(10px)" }}>
-                <div style={{ position:"absolute",top:-15,right:-15,fontSize:65,opacity:0.06 }}>🔥</div>
-                <div style={{ fontSize:9,letterSpacing:2,color:"#9B6B3A",fontFamily:"sans-serif",fontWeight:700,marginBottom:4 }}>🏆 NUMMER VAN DE MAAND</div>
-                <div style={{ fontSize:17,fontWeight:700,color:"#f0ede8" }}>{topTrack.title}</div>
-                <div style={{ fontSize:12,color:"#999",fontFamily:"sans-serif",marginBottom:8 }}>{topTrack.artist} · {topTrack.genre}</div>
+              <div style={{ background:"rgba(8,3,1,0.85)",border:"1px solid rgba(155,107,58,0.5)",borderRadius:16,padding:"14px",marginBottom:14,position:"relative",overflow:"hidden",backdropFilter:"blur(10px)" }}>
+                <div style={{ position:"absolute",top:-15,right:-15,fontSize:65,opacity:0.06 }}>⭐</div>
+                <div style={{ fontSize:9,letterSpacing:2,color:"#9B6B3A",fontFamily:"sans-serif",fontWeight:700,marginBottom:6 }}>⭐ ARTIEST VAN DE MAAND</div>
+                <div style={{ fontSize:20,fontWeight:700,color:"#f0ede8" }}>{topTrack.artist}</div>
+                <div style={{ fontSize:12,color:"#999",fontFamily:"sans-serif",marginTop:2,marginBottom:10 }}>{topTrack.genre} · {topTrack.month}</div>
+                <div style={{ background:"rgba(255,255,255,0.04)",border:"1px solid rgba(155,107,58,0.15)",borderRadius:10,padding:"9px 12px",marginBottom:10,cursor:"pointer" }} onClick={()=>{setSelectedTrack(topTrack);setView("detail");}}>
+                  <div style={{ fontSize:11,color:"#777",fontFamily:"sans-serif",marginBottom:2 }}>Beste track</div>
+                  <div style={{ fontSize:13,fontWeight:700,color:"#f0ede8" }}>{topTrack.title}</div>
+                </div>
                 <div style={{ display:"flex",gap:10,alignItems:"center" }}>
-                  <span style={{ fontSize:12,fontFamily:"sans-serif",color:"#D85A30" }}>🔥 {topTrack.flames}</span>
-                  <span style={{ fontSize:12,fontFamily:"sans-serif",color:"#AFA9EC" }}>❤️ {topTrack.likes}</span>
+                  <span style={{ fontSize:12,fontFamily:"sans-serif",color:"#D85A30" }}>🔥 {topTrack.flames} vlammen</span>
+                  <span style={{ fontSize:12,fontFamily:"sans-serif",color:"#AFA9EC" }}>❤️ {topTrack.likes} likes</span>
                   <button onClick={e=>{e.stopPropagation();jumpToTrack(topTrack);}} style={{ marginLeft:"auto",background:"#9B6B3A",border:"none",borderRadius:"50%",width:30,height:30,color:"#fff",fontSize:12,cursor:"pointer" }}>▶</button>
+                  <a href={"https://wa.me/?text="+encodeURIComponent("⭐ Artiest van de maand: "+topTrack.artist+" op BIGTUNES RADIO! 👉 https://bigtunes-radio.vercel.app")} target="_blank" rel="noreferrer" style={{ background:"rgba(37,211,102,0.12)",border:"1px solid rgba(37,211,102,0.3)",borderRadius:18,padding:"5px 10px",color:"#25D366",fontFamily:"sans-serif",fontSize:12,textDecoration:"none" }}>📱 Deel</a>
                 </div>
               </div>
             )}
