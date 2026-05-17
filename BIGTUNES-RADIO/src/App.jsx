@@ -9,7 +9,7 @@ const FREE_TRACKS = 1;
 const PRICE_PER_TRACK = 2.50;
 const ADMIN_EMAILS = ["stompinent@gmail.com", "wilbertmarman@gmail.com"];
 const VOTE_COOLDOWN_MS = 1000; // 1 seconde tussen stemmen
-const BG_IMAGE = "https://cpltcslwtyjrnfkqmwph.supabase.co/storage/v1/object/public/BIGTUNESFOTO/AF552965-94A0-429F-A9E1-9F46C7F00BE9.png";
+const BG_IMAGE = "https://i.ibb.co/zTjbKgPg/IMG-0355.png";
 const TRACKS_PER_PAGE = 10; // ← hoeveel tracks per keer laden
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -581,7 +581,11 @@ export default function App() {
   const visibleTracks = sortedTracks.slice(0, visibleCount);
   const hasMore = visibleCount < sortedTracks.length;
 
-  const topTrack = sortedTracks[0];
+  const currentMonth = new Intl.DateTimeFormat("nl-NL",{month:"long",year:"numeric"}).format(new Date());
+  const monthlyTopTrack = [...tracks]
+    .filter(t => t.month === currentMonth)
+    .sort((a,b) => (b.flames + b.likes) - (a.flames + a.likes))[0] || null;
+  const topTrack = monthlyTopTrack || sortedTracks[0];
 
   const BtnStyle = (active,accent) => ({ display:"flex",alignItems:"center",gap:4,background:active?`${accent}18`:"transparent",border:`1px solid ${active?accent:"rgba(255,255,255,0.08)"}`,borderRadius:20,padding:"3px 10px",color:active?accent:"#555",fontFamily:"sans-serif",fontSize:12,cursor:"pointer" });
   const inp = { width:"100%", background:"rgba(12,5,2,0.8)", border:"1px solid rgba(155,107,58,0.12)", borderRadius:9, padding:"10px 13px", color:"#f0ede8", fontFamily:"sans-serif", fontSize:14, boxSizing:"border-box", outline:"none" };
