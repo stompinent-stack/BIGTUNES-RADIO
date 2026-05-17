@@ -611,7 +611,7 @@ export default function App() {
       {/* Achtergrond */}
       <div style={{ position:"fixed", top:0, left:0, width:"100%", height:"100vh", zIndex:0, pointerEvents:"none", overflow:"hidden" }}>
         <div style={{ position:"absolute", inset:0, backgroundImage:`url('${BG_IMAGE}')`, backgroundSize:"cover", backgroundPosition:"center top" }}/>
-        <div style={{ position:"absolute", inset:0, background:"linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.05) 25%, rgba(0,0,0,0.6) 65%, rgba(0,0,0,0.97) 100%)" }}/>
+        <div style={{ position:"absolute", inset:0, background:"linear-gradient(to bottom, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.0) 20%, rgba(0,0,0,0.5) 65%, rgba(0,0,0,0.97) 100%)" }}/>
       </div>
 
       {/* Modals */}
