@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 
 const SUPABASE_URL = "https://cpltcslwtyjrnfkqmwph.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNwbHRjc2x3dHlqcm5ma3Ftd3BoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4NzY2MDksImV4cCI6MjA5NDQ1MjYwOX0.swoUuU6vRImhxd-diSqDvE0pa6zmXh8l3_FLDS6ktmA";
-const MAX_FILE_MB = 3;
+const MAX_FILE_MB = 4;
 const MAX_TRACKS = 3;
 const FREE_TRACKS = 1;
 const PRICE_PER_TRACK = 2.50;
